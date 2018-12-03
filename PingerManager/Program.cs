@@ -6,7 +6,9 @@ namespace PingerManager
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Добро пожаловать в PingerManager!");
+            Console.ReadLine();
+
         }
     }
 }
