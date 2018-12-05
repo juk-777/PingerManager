@@ -11,6 +11,7 @@ namespace PingerManager.Constructor
     public class PingBuilder : IPingBuilder
     {
         private readonly List<Timer> _timers = new List<Timer>();
+        private List<PingEntity> _pingEntities = new List<PingEntity>();
 
         public void Start(List<ConfigEntity> configEntityList)
         {
@@ -20,30 +21,47 @@ namespace PingerManager.Constructor
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
+                
+
                 Task.Run(() => BuildPing(configEntity));
             }
         }
 
         private void BuildPing(ConfigEntity configEntity)
         {
-            if(configEntity.Protocol == "ICMP")
+            //ServiceProvider serviceProvider = null;
+            IProtocolProvider protocolProvider = null;
+
+            if (configEntity.Protocol == "ICMP")
             {
-                var serviceProvider = new ServiceCollection()
-                    .AddTransient<IProtocolProvider, IcmpPing>()
-                    .BuildServiceProvider();
+                //serviceProvider = new ServiceCollection()
+                //    .AddTransient<IProtocolProvider, IcmpPing>()
+                //    .BuildServiceProvider();
 
-                var pingEntity = new PingEntity
-                {
-                    ConfigEntity = configEntity,
-                    ProtocolProvider = serviceProvider.GetService<IProtocolProvider>()
-                };
-
-                Ping(pingEntity);
-
-                TimerCallback tm = Ping;
-                var timer = new Timer(tm, pingEntity, 0, (int)TimeSpan.FromSeconds(configEntity.Period).TotalMilliseconds);
-                _timers.Add(timer);
+                protocolProvider = new IcmpPing();
             }
+            if (configEntity.Protocol == "TCP")
+            {
+                //serviceProvider = new ServiceCollection()
+                //    .AddTransient<IProtocolProvider, TcpPing>()
+                //    .BuildServiceProvider();
+
+                protocolProvider = new TcpPing();
+            }
+
+            var pingEntity = new PingEntity
+            {
+                ConfigEntity = configEntity,
+                //ProtocolProvider = serviceProvider.GetService<IProtocolProvider>()
+                ProtocolProvider = protocolProvider
+            };
+
+            _pingEntities.Add(pingEntity);
+
+            Ping(pingEntity);
+
+            TimerCallback tm = Ping;
+            _timers.Add(new Timer(tm, pingEntity, 0, (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds));
         }
 
         private async void Ping(object obj)
