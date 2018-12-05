@@ -10,16 +10,11 @@ namespace PingerManager.Constructor
     {
         public async Task<string> Ping(DateTime dateTime, ConfigEntity configEntity)
         {
-            var uri = new UriBuilder(configEntity.Host);
-            string host = uri.Host;
-
-            //return dateTime + " " + configEntity.Host + " " + IPStatus.Success;
-
             using (TcpClient tcpClient = new TcpClient())
             {
                 try
                 {
-                    await tcpClient.ConnectAsync(host, configEntity.Port);
+                    await tcpClient.ConnectAsync(configEntity.Host, configEntity.Port);
 
                     if (tcpClient.Connected)
                         return dateTime + " " + configEntity.Host + " " + IPStatus.Success;

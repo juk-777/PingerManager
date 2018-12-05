@@ -11,7 +11,6 @@ namespace PingerManager.Constructor
     public class PingBuilder : IPingBuilder
     {
         private readonly List<Timer> _timers = new List<Timer>();
-        private List<PingEntity> _pingEntities = new List<PingEntity>();
 
         public void Start(List<ConfigEntity> configEntityList)
         {
@@ -21,42 +20,32 @@ namespace PingerManager.Constructor
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
-                
-
                 Task.Run(() => BuildPing(configEntity));
             }
         }
 
         private void BuildPing(ConfigEntity configEntity)
         {
-            //ServiceProvider serviceProvider = null;
-            IProtocolProvider protocolProvider = null;
+            ServiceProvider serviceProvider = null;
 
             if (configEntity.Protocol == "ICMP")
             {
-                //serviceProvider = new ServiceCollection()
-                //    .AddTransient<IProtocolProvider, IcmpPing>()
-                //    .BuildServiceProvider();
-
-                protocolProvider = new IcmpPing();
+                serviceProvider = new ServiceCollection()
+                    .AddTransient<IProtocolProvider, IcmpPing>()
+                    .BuildServiceProvider();
             }
             if (configEntity.Protocol == "TCP")
             {
-                //serviceProvider = new ServiceCollection()
-                //    .AddTransient<IProtocolProvider, TcpPing>()
-                //    .BuildServiceProvider();
-
-                protocolProvider = new TcpPing();
+                serviceProvider = new ServiceCollection()
+                    .AddTransient<IProtocolProvider, TcpPing>()
+                    .BuildServiceProvider();
             }
 
             var pingEntity = new PingEntity
             {
                 ConfigEntity = configEntity,
-                //ProtocolProvider = serviceProvider.GetService<IProtocolProvider>()
-                ProtocolProvider = protocolProvider
+                ProtocolProvider = serviceProvider.GetService<IProtocolProvider>()
             };
-
-            _pingEntities.Add(pingEntity);
 
             Ping(pingEntity);
 
