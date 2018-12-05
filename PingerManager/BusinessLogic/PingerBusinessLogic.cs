@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
+using PingerManager.Constructor;
 
 namespace PingerManager.BusinessLogic
 {
@@ -10,11 +11,13 @@ namespace PingerManager.BusinessLogic
     {
         private readonly IConfigReader _configReader;
         private readonly IConfigVerifier _configVerifier;
+        private readonly IPingBuilder _pingBuilder;
 
-        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier)
+        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier, IPingBuilder pingBuilder)
         {
             _configReader = configReader;
             _configVerifier = configVerifier;
+            _pingBuilder = pingBuilder;
         }
 
         public async Task StartJob(CancellationToken token)
@@ -24,10 +27,10 @@ namespace PingerManager.BusinessLogic
 
             List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
-            if (!_configVerifier.Verify(configEntityList))
+            if (! await Task.Run(() => _configVerifier.Verify(configEntityList), token))
                 throw new ArgumentException("Проверка завершена с ошибкой!");
 
-
+            await Task.Run(() => _pingBuilder.Start(configEntityList), token);
         }
 
         #region IDisposable
@@ -39,7 +42,7 @@ namespace PingerManager.BusinessLogic
             {
                 if (disposing)
                 {
-                    
+                    _pingBuilder.Dispose();
                 }
                 _disposedValue = true;
             }

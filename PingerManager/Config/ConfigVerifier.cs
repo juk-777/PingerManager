@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace PingerManager.Config
 {
@@ -13,9 +14,16 @@ namespace PingerManager.Config
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
-                if (string.IsNullOrEmpty(configEntity.Host) || !Uri.IsWellFormedUriString(configEntity.Host, UriKind.RelativeOrAbsolute))
+                if (string.IsNullOrEmpty(configEntity.Host))
                 {
-                    Console.WriteLine("Хост не задан или задан не корректно!");
+                    Console.WriteLine("Хост не задан!");
+                    return false;
+                }
+
+                string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
+                if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
+                {
+                    Console.WriteLine($"Хост {configEntity.Host} задан не корректно!");
                     return false;
                 }
 

@@ -3,6 +3,7 @@ using PingerManager.BusinessLogic;
 using PingerManager.Config;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
+using PingerManager.Constructor;
 
 namespace PingerManager
 {
@@ -23,6 +24,7 @@ namespace PingerManager
                 .AddTransient<IConfigReader, ConfigReader>()
                 .AddTransient<IConfigStream, AppSettingsStream>()
                 .AddTransient<IConfigVerifier, ConfigVerifier>()
+                .AddTransient<IPingBuilder, PingBuilder>()
                 .BuildServiceProvider();
 
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
