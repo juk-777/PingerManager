@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PingerManager.BusinessLogic
 {
     public interface IPingerBusinessLogic : IDisposable
     {
-        void StartJob();
+        Task StartJob(CancellationToken token);
     }
 }

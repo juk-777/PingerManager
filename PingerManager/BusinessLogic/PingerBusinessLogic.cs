@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using PingerManager.Config;
 
 namespace PingerManager.BusinessLogic
@@ -7,23 +9,24 @@ namespace PingerManager.BusinessLogic
     class PingerBusinessLogic : IPingerBusinessLogic
     {
         private readonly IConfigReader _configReader;
+        private readonly IConfigVerifier _configVerifier;
 
-        public PingerBusinessLogic(IConfigReader configReader)
+        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier)
         {
             _configReader = configReader;
+            _configVerifier = configVerifier;
         }
 
-        public void StartJob()
+        public async Task StartJob(CancellationToken token)
         {
-            Console.WriteLine("\nНачинаю работу ...");
+            if (token.IsCancellationRequested)
+                return;
 
-            Console.WriteLine("\nСчитывание конфигурации ...");
-            List<ConfigEntity> configEntityList = _configReader.ReadConfig();
+            List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
-            foreach (ConfigEntity configEntity in configEntityList)
-            {
-                Console.WriteLine($"\nHost: {configEntity.Host} \nPeriod: {configEntity.Period} \nProtocol: {configEntity.Protocol} \nPort: {configEntity.Port} \nValidStatusCode: {configEntity.ValidStatusCode}");
-            }
+            if (!_configVerifier.Verify(configEntityList))
+                throw new ArgumentException("Проверка завершена с ошибкой!");
+
 
         }
 
