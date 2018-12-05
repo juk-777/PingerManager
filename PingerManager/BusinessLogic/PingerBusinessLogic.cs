@@ -22,7 +22,7 @@ namespace PingerManager.BusinessLogic
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
-                Console.WriteLine($"\nHost: {configEntity.Host} \nPeriod: {configEntity.Period} \nProtocol: {configEntity.Protocol}");
+                Console.WriteLine($"\nHost: {configEntity.Host} \nPeriod: {configEntity.Period} \nProtocol: {configEntity.Protocol} \nPort: {configEntity.Port} \nValidStatusCode: {configEntity.ValidStatusCode}");
             }
 
         }
