@@ -14,7 +14,7 @@ namespace PingerManager.Constructor
                 var reply = await ping
                     .SendPingAsync(new UriBuilder(configEntity.Host).Host, (int)TimeSpan.FromSeconds(configEntity.Period).TotalMilliseconds);
 
-                return new PingReply(pingDate, configEntity.Host, reply.Status);
+                return new PingReply(pingDate, configEntity, reply.Status);
             }
         }
     }

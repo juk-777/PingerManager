@@ -65,12 +65,10 @@ namespace PingerManager.Constructor
             {
                 var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity.ConfigEntity);
                 OnPinged(reply);
-                //Console.WriteLine(reply.PingDate + " " + reply.Host + " " + reply.Status);
             }
             catch
             {
-                OnPinged(new PingReply(DateTime.Now, pingEntity.ConfigEntity.Host, IPStatus.BadOption));
-                //Console.WriteLine(DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption);
+                OnPinged(new PingReply(DateTime.Now, pingEntity.ConfigEntity, IPStatus.BadOption));
             }
         }
 

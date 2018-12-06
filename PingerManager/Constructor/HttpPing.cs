@@ -18,14 +18,14 @@ namespace PingerManager.Constructor
                 using (var reply = (HttpWebResponse)await request.GetResponseAsync())
                 {
                     if (reply.StatusCode == (HttpStatusCode)configEntity.ValidStatusCode)
-                        return new PingReply(pingDate, configEntity.Host, IPStatus.Success);
+                        return new PingReply(pingDate, configEntity, IPStatus.Success);
 
-                    return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
+                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
                 }
             }
             catch (WebException)
             {
-                return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
+                return new PingReply(pingDate, configEntity, IPStatus.BadOption);
             }
         }
     }

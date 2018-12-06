@@ -17,13 +17,13 @@ namespace PingerManager.Constructor
                     await tcpClient.ConnectAsync(new UriBuilder(configEntity.Host).Host, configEntity.Port);
 
                     if (tcpClient.Connected)
-                        return new PingReply(pingDate, configEntity.Host, IPStatus.Success);
+                        return new PingReply(pingDate, configEntity, IPStatus.Success);
 
-                    return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
+                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
                 }
                 catch (Exception)
                 {
-                    return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
+                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
                 }
             }
         }

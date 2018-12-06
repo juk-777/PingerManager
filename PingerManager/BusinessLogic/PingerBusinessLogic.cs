@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
 using PingerManager.Constructor;
+using PingerManager.Log;
 
 namespace PingerManager.BusinessLogic
 {
@@ -30,6 +31,9 @@ namespace PingerManager.BusinessLogic
             if (! await Task.Run(() => _configVerifier.Verify(configEntityList), token))
                 throw new ArgumentException("Проверка завершена с ошибкой!");
 
+            _pingBuilder.Pinged += ConsoleLogger.Log;
+            _pingBuilder.Pinged += TxtLogger.Log;
+
             await Task.Run(() => _pingBuilder.Start(configEntityList), token);
         }
 
@@ -42,6 +46,8 @@ namespace PingerManager.BusinessLogic
             {
                 if (disposing)
                 {
+                    _pingBuilder.Pinged -= ConsoleLogger.Log;
+                    _pingBuilder.Pinged -= TxtLogger.Log;
                     _pingBuilder.Dispose();
                 }
                 _disposedValue = true;
