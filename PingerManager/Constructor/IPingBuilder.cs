@@ -7,5 +7,6 @@ namespace PingerManager.Constructor
     public interface IPingBuilder : IDisposable
     {
         void Start(List<ConfigEntity> configEntityList);
+        event EventHandler<PingReply> Pinged;
     }
 }

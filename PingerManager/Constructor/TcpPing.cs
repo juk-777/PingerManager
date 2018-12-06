@@ -8,45 +8,24 @@ namespace PingerManager.Constructor
 {
     class TcpPing : IProtocolProvider
     {
-        public async Task<string> Ping(DateTime dateTime, ConfigEntity configEntity)
+        public async Task<PingReply> Ping(DateTime pingDate, ConfigEntity configEntity)
         {
             using (TcpClient tcpClient = new TcpClient())
             {
                 try
                 {
-                    await tcpClient.ConnectAsync(configEntity.Host, configEntity.Port);
+                    await tcpClient.ConnectAsync(new UriBuilder(configEntity.Host).Host, configEntity.Port);
 
                     if (tcpClient.Connected)
-                        return dateTime + " " + configEntity.Host + " " + IPStatus.Success;
+                        return new PingReply(pingDate, configEntity.Host, IPStatus.Success);
 
-                    return dateTime + " " + configEntity.Host + " " + IPStatus.BadOption;
+                    return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
                 }
                 catch (Exception)
                 {
-                    return dateTime + " " + configEntity.Host + " " + IPStatus.BadOption;
+                    return new PingReply(pingDate, configEntity.Host, IPStatus.BadOption);
                 }
             }
         }
-
-        #region IDisposable
-        private bool _disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                }
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

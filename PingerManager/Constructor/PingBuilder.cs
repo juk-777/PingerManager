@@ -11,6 +11,8 @@ namespace PingerManager.Constructor
     public class PingBuilder : IPingBuilder
     {
         private readonly List<Timer> _timers = new List<Timer>();
+        private ServiceProvider _serviceProvider;
+        public event EventHandler<PingReply> Pinged;
 
         public void Start(List<ConfigEntity> configEntityList)
         {
@@ -26,25 +28,27 @@ namespace PingerManager.Constructor
 
         private void BuildPing(ConfigEntity configEntity)
         {
-            ServiceProvider serviceProvider = null;
+            _serviceProvider = null;
 
-            if (configEntity.Protocol == "ICMP")
+            switch (configEntity.Protocol)
             {
-                serviceProvider = new ServiceCollection()
-                    .AddTransient<IProtocolProvider, IcmpPing>()
-                    .BuildServiceProvider();
-            }
-            if (configEntity.Protocol == "TCP")
-            {
-                serviceProvider = new ServiceCollection()
-                    .AddTransient<IProtocolProvider, TcpPing>()
-                    .BuildServiceProvider();
+                case "ICMP":
+                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, IcmpPing>().BuildServiceProvider();
+                    break;
+                case "TCP":
+                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, TcpPing>().BuildServiceProvider();
+                    break;
+                case "HTTP":
+                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, HttpPing>().BuildServiceProvider();
+                    break;
+                default:
+                    throw new ArgumentException("Протокол не поддерживается!");
             }
 
             var pingEntity = new PingEntity
             {
                 ConfigEntity = configEntity,
-                ProtocolProvider = serviceProvider.GetService<IProtocolProvider>()
+                ProtocolProvider = _serviceProvider.GetService<IProtocolProvider>()
             };
 
             Ping(pingEntity);
@@ -60,12 +64,19 @@ namespace PingerManager.Constructor
             try
             {
                 var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity.ConfigEntity);
-                Console.WriteLine(reply);
+                OnPinged(reply);
+                //Console.WriteLine(reply.PingDate + " " + reply.Host + " " + reply.Status);
             }
             catch
             {
-                Console.WriteLine(DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption);
+                OnPinged(new PingReply(DateTime.Now, pingEntity.ConfigEntity.Host, IPStatus.BadOption));
+                //Console.WriteLine(DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption);
             }
+        }
+
+        protected virtual void OnPinged(PingReply e)
+        {
+            Pinged?.Invoke(this, e);
         }
 
         #region IDisposable
@@ -77,10 +88,8 @@ namespace PingerManager.Constructor
             {
                 if (disposing)
                 {
-                    foreach (var timer in _timers)
-                    {
-                        timer.Dispose();
-                    }
+                    _timers?.ForEach(t => t.Dispose());
+                    _serviceProvider?.Dispose();
                 }
                 _disposedValue = true;
             }

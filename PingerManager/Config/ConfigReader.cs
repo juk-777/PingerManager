@@ -20,11 +20,6 @@ namespace PingerManager.Config
 
             List<ConfigEntity> configEntityList = _configStream.ReadStream();
 
-            foreach (ConfigEntity configEntity in configEntityList)
-            {
-                Console.WriteLine($"\nHost: {configEntity.Host} \nPeriod: {configEntity.Period} \nProtocol: {configEntity.Protocol} \nPort: {configEntity.Port} \nValidStatusCode: {configEntity.ValidStatusCode}");
-            }
-
             return configEntityList;
         }
     }

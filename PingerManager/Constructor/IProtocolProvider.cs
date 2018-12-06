@@ -4,8 +4,8 @@ using PingerManager.Config;
 
 namespace PingerManager.Constructor
 {
-    public interface IProtocolProvider : IDisposable
+    public interface IProtocolProvider
     {
-        Task<string> Ping(DateTime dateTime, ConfigEntity configEntity);
+        Task<PingReply> Ping(DateTime pingDate, ConfigEntity configEntity);
     }
 }
