@@ -8,7 +8,7 @@ namespace PingerManager.Logger
     {
         public void Write(PingReply pingReply)
         {
-            string writePath = Path.Combine(pingReply.ConfigEntity.Host + "_" + pingReply.ConfigEntity.Protocol + "_log" + ".txt");
+            string writePath = Path.Combine("log_" + pingReply.ConfigEntity.Host + "_" + pingReply.ConfigEntity.Protocol + ".txt");
 
             StringBuilder strLog = new StringBuilder();
             strLog.Append(pingReply.PingDate + " " + pingReply.ConfigEntity.Host + " " + pingReply.Status);

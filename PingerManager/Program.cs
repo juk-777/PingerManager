@@ -1,9 +1,7 @@
 ﻿using System;
 using PingerManager.BusinessLogic;
-using PingerManager.Config;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
-using PingerManager.Constructor;
 
 namespace PingerManager
 {
@@ -19,14 +17,7 @@ namespace PingerManager
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
 
-            var serviceProvider = new ServiceCollection()
-                .AddTransient<IPingerBusinessLogic, PingerBusinessLogic>()
-                .AddTransient<IConfigReader, ConfigReader>()
-                .AddTransient<IConfigStream, AppSettingsStream>()
-                .AddTransient<IConfigVerifier, ConfigVerifier>()
-                .AddTransient<IPingBuilder, PingBuilder>()
-                .BuildServiceProvider();
-
+            var serviceProvider = PingerServiceProvider.ServiceProvider;
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
 
             try
@@ -52,10 +43,8 @@ namespace PingerManager
                 serviceProvider.Dispose();
             }
 
-
             Console.WriteLine("До скорой встречи в PingerManager!");
             Console.ReadLine();
-
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,8 +12,13 @@ namespace PingerManager.Constructor
     public class PingBuilder : IPingBuilder
     {
         private readonly List<Timer> _timers = new List<Timer>();
-        private ServiceProvider _serviceProvider;
+        private readonly ServiceProvider _serviceProvider;
         public event EventHandler<PingReply> Pinged;
+
+        public PingBuilder()
+        {
+            _serviceProvider = PingerServiceProvider.ServiceProvider;
+        }
 
         public void Start(List<ConfigEntity> configEntityList)
         {
@@ -28,28 +34,23 @@ namespace PingerManager.Constructor
 
         private void BuildPing(ConfigEntity configEntity)
         {
-            _serviceProvider = null;
+            var protocolProviders = _serviceProvider.GetServices<IProtocolProvider>().ToList();
+            PingEntity pingEntity;
 
             switch (configEntity.Protocol)
             {
                 case "ICMP":
-                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, IcmpPing>().BuildServiceProvider();
+                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(IcmpPing)) };
                     break;
                 case "TCP":
-                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, TcpPing>().BuildServiceProvider();
+                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(TcpPing)) };
                     break;
                 case "HTTP":
-                    _serviceProvider = new ServiceCollection().AddTransient<IProtocolProvider, HttpPing>().BuildServiceProvider();
+                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(HttpPing)) };
                     break;
                 default:
                     throw new ArgumentException("Протокол не поддерживается!");
             }
-
-            var pingEntity = new PingEntity
-            {
-                ConfigEntity = configEntity,
-                ProtocolProvider = _serviceProvider.GetService<IProtocolProvider>()
-            };
 
             Ping(pingEntity);
 
