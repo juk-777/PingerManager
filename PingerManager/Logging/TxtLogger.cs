@@ -1,24 +1,21 @@
-﻿using System;
-
-namespace PingerManager.Logging
+﻿namespace PingerManager.Logging
 {
-    class TxtLogger : ILoggerProvider
+    public class TxtLogger : ILoggerProvider
     {
-        //private static readonly ITxtLoggerWriter TxtLoggerWriter;
+        private readonly ITxtLoggerWriter _txtLoggerWriter;
+        private readonly object _locker = new object();
 
-        //static TxtLogger()
-        //{
-        //    TxtLoggerWriter = new TxtLoggerWriter();
-        //}
-
-        //public static void Log(object sender, PingReply pingReply)
-        //{
-        //    TxtLoggerWriter.Write(pingReply);
-        //}
+        public TxtLogger()
+        {
+            _txtLoggerWriter = new TxtLoggerWriter();
+        }
 
         public void Log(MessageType messageType, string message)
         {
-            Console.WriteLine(messageType + ": " + message + " - пишу в файл");
+            lock (_locker)
+            {
+                _txtLoggerWriter.Write(messageType, message);
+            }
         }
     }
 }

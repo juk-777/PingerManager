@@ -1,9 +1,7 @@
-﻿using PingerManager.Constructor;
-
-namespace PingerManager.Logging
+﻿namespace PingerManager.Logging
 {
     public interface ITxtLoggerWriter
     {
-        void Write(PingReply pingReply);
+        void Write(MessageType messageType, string message);
     }
 }

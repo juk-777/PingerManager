@@ -1,5 +1,4 @@
 ﻿using PingerManager.Logging;
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -9,9 +8,7 @@ namespace PingerManager.Config
     {
         public bool Verify(List<ConfigEntity> configEntityList, ILogger logger)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
             logger.Log(MessageType.Info, "Проверка конфигурации ...");
-            Console.ForegroundColor = ConsoleColor.Gray;
 
             foreach (ConfigEntity configEntity in configEntityList)
             {

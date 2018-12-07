@@ -24,10 +24,7 @@ namespace PingerManager.Constructor
         public void Start(List<ConfigEntity> configEntityList, ILogger logger)
         {
             _logger = logger;
-
-            Console.ForegroundColor = ConsoleColor.Cyan;
             _logger.Log(MessageType.Info, "Запускаем Pinger ...");
-            Console.ForegroundColor = ConsoleColor.Gray;
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
