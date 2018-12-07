@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace PingerManager.Logging
 {
     class LoggerFactory : ILoggerFactory
     {
-        private readonly List<ILoggerProvider> _loggerProviders = new List<ILoggerProvider>();
+        public ILogger Logger { get; private set; }
+        private readonly ServiceProvider _serviceProvider;
+
+        public LoggerFactory()
+        {
+            _serviceProvider = PingerServiceProvider.ServiceProvider;
+        }
 
         public void AddLoggerProvider(ILoggerProvider loggerProvider)
         {
-            _loggerProviders.Add(loggerProvider);
-        }
-
-        public Logger CreateLogger()
-        {
-            var logger = new Logger
+            if (Logger == null)
             {
-                Providers = _loggerProviders
-            };
-
-            return logger;
+                Logger = _serviceProvider.GetService<ILogger>();
+            }
+            Logger.Providers.Add(loggerProvider);
         }
     }
 }

@@ -12,18 +12,20 @@ namespace PingerManager.Constructor
 {
     public class PingBuilder : IPingBuilder
     {
+        private readonly ILoggerFactory _loggerFactory;
         private ILogger _logger;
         private readonly List<Timer> _timers = new List<Timer>();
         private readonly ServiceProvider _serviceProvider;
 
-        public PingBuilder()
+        public PingBuilder(ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
             _serviceProvider = PingerServiceProvider.ServiceProvider;
         }
 
-        public void Start(List<ConfigEntity> configEntityList, ILogger logger)
+        public void Start(List<ConfigEntity> configEntityList)
         {
-            _logger = logger;
+            _logger = _loggerFactory.Logger;
             _logger.Log(MessageType.Info, "Запускаем Pinger ...");
 
             foreach (ConfigEntity configEntity in configEntityList)

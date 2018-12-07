@@ -9,6 +9,8 @@ namespace PingerManager
 {
     static class Program
     {
+        private static ILogger _logger;
+
         static void Main()
         {
             #region Приветствие
@@ -25,7 +27,6 @@ namespace PingerManager
             var serviceProvider = PingerServiceProvider.ServiceProvider;
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
             var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            ILogger logger = null;
 
             try
             {
@@ -35,18 +36,18 @@ namespace PingerManager
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLogger)));
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLogger)));
-                logger = loggerFactory.CreateLogger();
+                _logger = loggerFactory.Logger;
 
-                businessLogic.StartJob(token, logger);
+                businessLogic.StartJob(token);
 
                 Console.ReadLine();
                 cts.Cancel();
 
-                logger.Log(MessageType.Info, "Завершение работы ...");
+                _logger?.Log(MessageType.Info, "Завершение работы ...");
             }
             catch (Exception e)
             {
-                logger?.Log(MessageType.Error, e.Message);
+                _logger?.Log(MessageType.Error, e.Message);
                 throw;
             }
             finally

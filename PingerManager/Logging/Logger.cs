@@ -7,6 +7,11 @@ namespace PingerManager.Logging
     {
         public List<ILoggerProvider> Providers { get; set; }
 
+        public Logger()
+        {
+            Providers = new List<ILoggerProvider>();
+        }
+
         public void Log(MessageType messageType, string message)
         {
             Providers.ForEach(async p => await Task.Run(() => p.Log(messageType, message)));

@@ -6,8 +6,15 @@ namespace PingerManager.Config
 {
     class ConfigVerifier : IConfigVerifier
     {
-        public bool Verify(List<ConfigEntity> configEntityList, ILogger logger)
+        private readonly ILoggerFactory _loggerFactory;
+
+        public ConfigVerifier(ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
+        }
+        public bool Verify(List<ConfigEntity> configEntityList)
+        {
+            var logger = _loggerFactory.Logger;
             logger.Log(MessageType.Info, "Проверка конфигурации ...");
 
             foreach (ConfigEntity configEntity in configEntityList)

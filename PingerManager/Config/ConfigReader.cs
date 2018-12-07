@@ -6,14 +6,17 @@ namespace PingerManager.Config
     public class ConfigReader : IConfigReader
     {
         private readonly IConfigStream _configStream;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public ConfigReader(IConfigStream configStream)
+        public ConfigReader(IConfigStream configStream, ILoggerFactory loggerFactory)
         {
             _configStream = configStream;
+            _loggerFactory = loggerFactory;
         }
 
-        public List<ConfigEntity> ReadConfig(ILogger logger)
+        public List<ConfigEntity> ReadConfig()
         {
+            var logger = _loggerFactory.Logger;
             logger.Log(MessageType.Info, "Считывание конфигурации ...");
 
             List<ConfigEntity> configEntityList = _configStream.ReadStream(logger);

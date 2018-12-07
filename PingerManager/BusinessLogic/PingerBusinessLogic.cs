@@ -13,16 +13,20 @@ namespace PingerManager.BusinessLogic
         private readonly IConfigReader _configReader;
         private readonly IConfigVerifier _configVerifier;
         private readonly IPingBuilder _pingBuilder;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier, IPingBuilder pingBuilder)
+        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier, IPingBuilder pingBuilder, ILoggerFactory loggerFactory)
         {
             _configReader = configReader;
             _configVerifier = configVerifier;
             _pingBuilder = pingBuilder;
+            _loggerFactory = loggerFactory;
         }
 
-        public async Task StartJob(CancellationToken token, ILogger logger)
+        public async Task StartJob(CancellationToken token)
         {
+            var logger = _loggerFactory.Logger;
+
             try
             {
                 logger.Log(MessageType.Info, "Запуск работы ...");
@@ -30,12 +34,12 @@ namespace PingerManager.BusinessLogic
                 if (token.IsCancellationRequested)
                     return;
 
-                List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(logger), token);
+                List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
-                if (!await Task.Run(() => _configVerifier.Verify(configEntityList, logger), token))
+                if (!await Task.Run(() => _configVerifier.Verify(configEntityList), token))
                     throw new ArgumentException("Проверка завершена с ошибкой!");
 
-                await Task.Run(() => _pingBuilder.Start(configEntityList, logger), token);
+                await Task.Run(() => _pingBuilder.Start(configEntityList), token);
             }
             catch (Exception e)
             {
