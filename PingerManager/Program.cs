@@ -11,17 +11,21 @@ namespace PingerManager
     {
         static void Main()
         {
-            Console.WriteLine("Добро пожаловать в PingerManager!");
+            #region Приветствие
 
+            Console.WriteLine("Добро пожаловать в PingerManager!");
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\nДля запуска работы нажмите Enter");
             Console.WriteLine("Для завершения работы нажмите Enter");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
 
+            #endregion
+
             var serviceProvider = PingerServiceProvider.ServiceProvider;
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
             var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            ILogger logger = null;
 
             try
             {
@@ -31,7 +35,7 @@ namespace PingerManager
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLogger)));
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLogger)));
-                var logger = loggerFactory.CreateLogger();
+                logger = loggerFactory.CreateLogger();
 
                 businessLogic.StartJob(token, logger);
 
@@ -42,7 +46,7 @@ namespace PingerManager
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                logger?.Log(MessageType.Error, e.Message);
                 throw;
             }
             finally

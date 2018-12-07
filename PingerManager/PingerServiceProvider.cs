@@ -17,6 +17,7 @@ namespace PingerManager
             .AddSingleton<ILoggerFactory, LoggerFactory>()
             .AddTransient<ILoggerProvider, ConsoleLogger>()
             .AddTransient<ILoggerProvider, TxtLogger>()
+            .AddTransient<ITxtLoggerWriter>(s => new TxtLoggerWriter("log_pingers.txt"))
             .AddTransient<ILogger, Logger>()
             .AddTransient<IProtocolProvider, IcmpPing>()
             .AddTransient<IProtocolProvider, TcpPing>()

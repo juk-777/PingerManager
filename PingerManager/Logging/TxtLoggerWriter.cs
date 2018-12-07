@@ -5,11 +5,15 @@ namespace PingerManager.Logging
 {
     public class TxtLoggerWriter : ITxtLoggerWriter
     {
+        private readonly string _logPath;
+
+        public TxtLoggerWriter(string logPath)
+        {
+            _logPath = logPath;
+        }
         public void Write(MessageType messageType, string message)
         {
-            //string writePath = Path.Combine("log_" + pingReply.ConfigEntity.Host + "_" + pingReply.ConfigEntity.Protocol + ".txt");
-            string writePath = Path.Combine("log_pingers" + ".txt");
-
+            string writePath = Path.Combine(_logPath);
             StringBuilder strLog = new StringBuilder();
             strLog.Append(messageType + ": " + message);
             

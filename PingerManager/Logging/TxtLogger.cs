@@ -5,9 +5,9 @@
         private readonly ITxtLoggerWriter _txtLoggerWriter;
         private readonly object _locker = new object();
 
-        public TxtLogger()
+        public TxtLogger(ITxtLoggerWriter txtLoggerWriter)
         {
-            _txtLoggerWriter = new TxtLoggerWriter();
+            _txtLoggerWriter = txtLoggerWriter;
         }
 
         public void Log(MessageType messageType, string message)
