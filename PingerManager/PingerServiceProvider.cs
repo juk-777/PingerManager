@@ -2,6 +2,7 @@
 using PingerManager.BusinessLogic;
 using PingerManager.Config;
 using PingerManager.Constructor;
+using PingerManager.Logging;
 
 namespace PingerManager
 {
@@ -13,6 +14,10 @@ namespace PingerManager
             .AddSingleton<IConfigStream, AppSettingsStream>()
             .AddSingleton<IConfigVerifier, ConfigVerifier>()
             .AddSingleton<IPingBuilder, PingBuilder>()
+            .AddSingleton<ILoggerFactory, LoggerFactory>()
+            .AddTransient<ILoggerProvider, ConsoleLogger>()
+            .AddTransient<ILoggerProvider, TxtLogger>()
+            .AddTransient<ILogger, Logger>()
             .AddTransient<IProtocolProvider, IcmpPing>()
             .AddTransient<IProtocolProvider, TcpPing>()
             .AddTransient<IProtocolProvider, HttpPing>()

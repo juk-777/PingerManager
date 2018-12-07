@@ -2,7 +2,7 @@
 using System.Text;
 using PingerManager.Constructor;
 
-namespace PingerManager.Logger
+namespace PingerManager.Logging
 {
     public class TxtLoggerWriter : ITxtLoggerWriter
     {

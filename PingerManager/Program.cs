@@ -2,6 +2,8 @@
 using PingerManager.BusinessLogic;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
+using PingerManager.Logging;
+using System.Linq;
 
 namespace PingerManager
 {
@@ -19,18 +21,24 @@ namespace PingerManager
 
             var serviceProvider = PingerServiceProvider.ServiceProvider;
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
+            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
 
             try
             {
                 CancellationTokenSource cts = new CancellationTokenSource();
                 CancellationToken token = cts.Token;
 
-                businessLogic.StartJob(token);
+                var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
+                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLogger)));
+                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLogger)));
+                var logger = loggerFactory.CreateLogger();
+
+                businessLogic.StartJob(token, logger);
 
                 Console.ReadLine();
                 cts.Cancel();
 
-                Console.WriteLine("\nЗавершение работы ...");
+                logger.Log(MessageType.Info, "Завершение работы ...");
             }
             catch (Exception e)
             {

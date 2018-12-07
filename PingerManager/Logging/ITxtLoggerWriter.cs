@@ -1,6 +1,6 @@
 ﻿using PingerManager.Constructor;
 
-namespace PingerManager.Logger
+namespace PingerManager.Logging
 {
     public interface ITxtLoggerWriter
     {

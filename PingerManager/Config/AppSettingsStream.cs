@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using PingerManager.Logging;
 
 namespace PingerManager.Config
 {
     class AppSettingsStream : IConfigStream
     {
-        public List<ConfigEntity> ReadStream()
+        public List<ConfigEntity> ReadStream(ILogger logger)
         {
             List<ConfigEntity> configEntityList = new List<ConfigEntity>();
 
@@ -25,7 +25,7 @@ namespace PingerManager.Config
                 configEntityList.Add(configEntity);
             }
 
-            Console.WriteLine("Конфигурация считана!");
+            logger.Log(MessageType.Info, "Конфигурация считана!");
             return configEntityList;
         }
     }

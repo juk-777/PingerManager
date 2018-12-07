@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PingerManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -6,42 +7,42 @@ namespace PingerManager.Config
 {
     class ConfigVerifier : IConfigVerifier
     {
-        public bool Verify(List<ConfigEntity> configEntityList)
+        public bool Verify(List<ConfigEntity> configEntityList, ILogger logger)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\nПроверка конфигурации ...");
+            logger.Log(MessageType.Info, "Проверка конфигурации ...");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
                 if (string.IsNullOrEmpty(configEntity.Host))
                 {
-                    Console.WriteLine("Хост не задан!");
+                    logger.Log(MessageType.Error, "Хост не задан!");
                     return false;
                 }
 
                 string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
                 {
-                    Console.WriteLine($"Хост {configEntity.Host} задан не корректно!");
+                    logger.Log(MessageType.Error, $"Хост {configEntity.Host} задан не корректно!");
                     return false;
                 }
 
                 if (configEntity.Period <= 0)
                 {
-                    Console.WriteLine("Период задан неверно!");
+                    logger.Log(MessageType.Error, "Период задан неверно!");
                     return false;
                 }
 
                 if (string.IsNullOrEmpty(configEntity.Protocol))
                 {
-                    Console.WriteLine("Протокол не задан!");
+                    logger.Log(MessageType.Error, "Протокол не задан!");
                     return false;
                 }
 
                 if (configEntity.Protocol != "ICMP" && configEntity.Protocol != "HTTP" && configEntity.Protocol != "TCP")
                 {
-                    Console.WriteLine($"Протокол: {configEntity.Protocol} не поддерживается!");
+                    logger.Log(MessageType.Error, $"Протокол: { configEntity.Protocol} не поддерживается!");
                     return false;
                 }
 
@@ -49,7 +50,7 @@ namespace PingerManager.Config
                 {
                     if (configEntity.Port < 0)
                     {
-                        Console.WriteLine("Порт задан неверно!");
+                        logger.Log(MessageType.Error, "Порт задан неверно!");
                         return false;
                     }
                 }
@@ -58,13 +59,13 @@ namespace PingerManager.Config
                 {
                     if (configEntity.ValidStatusCode < 0)
                     {
-                        Console.WriteLine("Валидный статус код задан неверно!");
+                        logger.Log(MessageType.Error, "Валидный статус код задан неверно!");
                         return false;
                     }
                 }
             }
 
-            Console.WriteLine("Проверка завершена успешно!");
+            logger.Log(MessageType.Info, "Проверка завершена успешно!");
             return true;
         }
     }

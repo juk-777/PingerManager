@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
 using PingerManager.Constructor;
-using PingerManager.Logger;
+using PingerManager.Logging;
 
 namespace PingerManager.BusinessLogic
 {
@@ -21,20 +21,27 @@ namespace PingerManager.BusinessLogic
             _pingBuilder = pingBuilder;
         }
 
-        public async Task StartJob(CancellationToken token)
+        public async Task StartJob(CancellationToken token, ILogger logger)
         {
-            if (token.IsCancellationRequested)
-                return;
+            try
+            {
+                logger.Log(MessageType.Info, "Запуск работы ...");
 
-            List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
+                if (token.IsCancellationRequested)
+                    return;
 
-            if (! await Task.Run(() => _configVerifier.Verify(configEntityList), token))
-                throw new ArgumentException("Проверка завершена с ошибкой!");
+                List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(logger), token);
 
-            _pingBuilder.Pinged += ConsoleLogger.Log;
-            _pingBuilder.Pinged += TxtLogger.Log;
+                if (!await Task.Run(() => _configVerifier.Verify(configEntityList, logger), token))
+                    throw new ArgumentException("Проверка завершена с ошибкой!");
 
-            await Task.Run(() => _pingBuilder.Start(configEntityList), token);
+                await Task.Run(() => _pingBuilder.Start(configEntityList, logger), token);
+            }
+            catch (Exception e)
+            {
+                logger.Log(MessageType.Error, e.Message);
+                throw;
+            }
         }
 
         #region IDisposable
@@ -46,8 +53,6 @@ namespace PingerManager.BusinessLogic
             {
                 if (disposing)
                 {
-                    _pingBuilder.Pinged -= ConsoleLogger.Log;
-                    _pingBuilder.Pinged -= TxtLogger.Log;
                     _pingBuilder.Dispose();
                 }
                 _disposedValue = true;

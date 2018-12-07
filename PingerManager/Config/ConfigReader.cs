@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PingerManager.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace PingerManager.Config
@@ -12,13 +13,13 @@ namespace PingerManager.Config
             _configStream = configStream;
         }
 
-        public List<ConfigEntity> ReadConfig()
+        public List<ConfigEntity> ReadConfig(ILogger logger)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Считывание конфигурации ...");
+            logger.Log(MessageType.Info, "Считывание конфигурации ...");
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            List<ConfigEntity> configEntityList = _configStream.ReadStream();
+            List<ConfigEntity> configEntityList = _configStream.ReadStream(logger);
 
             return configEntityList;
         }

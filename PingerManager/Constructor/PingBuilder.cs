@@ -6,24 +6,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using PingerManager.Config;
+using PingerManager.Logging;
 
 namespace PingerManager.Constructor
 {
     public class PingBuilder : IPingBuilder
     {
+        private ILogger _logger;
         private readonly List<Timer> _timers = new List<Timer>();
         private readonly ServiceProvider _serviceProvider;
-        public event EventHandler<PingReply> Pinged;
 
         public PingBuilder()
         {
             _serviceProvider = PingerServiceProvider.ServiceProvider;
         }
 
-        public void Start(List<ConfigEntity> configEntityList)
+        public void Start(List<ConfigEntity> configEntityList, ILogger logger)
         {
+            _logger = logger;
+
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\nЗапускаем Pinger ...");
+            _logger.Log(MessageType.Info, "Запускаем Pinger ...");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             foreach (ConfigEntity configEntity in configEntityList)
@@ -37,19 +40,27 @@ namespace PingerManager.Constructor
             var protocolProviders = _serviceProvider.GetServices<IProtocolProvider>().ToList();
             PingEntity pingEntity;
 
-            switch (configEntity.Protocol)
+            try
             {
-                case "ICMP":
-                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(IcmpPing)) };
-                    break;
-                case "TCP":
-                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(TcpPing)) };
-                    break;
-                case "HTTP":
-                    pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(HttpPing)) };
-                    break;
-                default:
-                    throw new ArgumentException("Протокол не поддерживается!");
+                switch (configEntity.Protocol)
+                {
+                    case "ICMP":
+                        pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(IcmpPing)) };
+                        break;
+                    case "TCP":
+                        pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(TcpPing)) };
+                        break;
+                    case "HTTP":
+                        pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(HttpPing)) };
+                        break;
+                    default:
+                        throw new ArgumentException("Протокол не поддерживается!");
+                }
+            }
+            catch (ArgumentException e)
+            {
+                _logger.Log(MessageType.Error, e.Message);
+                throw;
             }
 
             Ping(pingEntity);
@@ -65,17 +76,12 @@ namespace PingerManager.Constructor
             try
             {
                 var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity.ConfigEntity);
-                OnPinged(reply);
+                _logger.Log(MessageType.Info, reply.PingDate + " " + reply.ConfigEntity.Host + " " + reply.Status);
             }
             catch
             {
-                OnPinged(new PingReply(DateTime.Now, pingEntity.ConfigEntity, IPStatus.BadOption));
+                _logger.Log(MessageType.Error, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption);
             }
-        }
-
-        protected virtual void OnPinged(PingReply e)
-        {
-            Pinged?.Invoke(this, e);
         }
 
         #region IDisposable
