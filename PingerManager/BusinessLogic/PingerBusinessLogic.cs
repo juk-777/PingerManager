@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
 using PingerManager.Constructor;
-using PingerManager.Log;
+using PingerManager.Logger;
 
 namespace PingerManager.BusinessLogic
 {
