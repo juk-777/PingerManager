@@ -2,7 +2,7 @@
 
 namespace PingerManager.Logging
 {
-    class LoggerFactory : ILoggerFactory
+    public class LoggerFactory : ILoggerFactory
     {
         public ILogger Logger { get; private set; }
         private readonly ServiceProvider _serviceProvider;
