@@ -5,7 +5,7 @@ namespace PingerManager.Logging
 {
     public class Logger : ILogger
     {
-        public List<ILoggerProvider> Providers { get; set; }
+        public List<ILoggerProvider> Providers { get; }
 
         public Logger()
         {
@@ -21,7 +21,6 @@ namespace PingerManager.Logging
     public enum MessageType
     {
         Info = 1,
-        Warning,
         Error
     }
 }
