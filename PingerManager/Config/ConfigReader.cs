@@ -19,7 +19,7 @@ namespace PingerManager.Config
             var logger = _loggerFactory.Logger;
             logger.Log(MessageType.Info, "Считывание конфигурации ...");
 
-            List<ConfigEntity> configEntityList = _configStream.ReadStream(logger);
+            List<ConfigEntity> configEntityList = _configStream.ReadStream();
 
             return configEntityList;
         }

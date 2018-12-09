@@ -7,15 +7,24 @@ namespace PingerManager.Config
 {
     class AppSettingsStream : IConfigStream
     {
-        public List<ConfigEntity> ReadStream(ILogger logger)
+        private readonly IConfigurationBuilder _configurationBuilder;
+        private readonly ILoggerFactory _loggerFactory;
+
+        public AppSettingsStream(IConfigurationBuilder configurationBuilder, ILoggerFactory loggerFactory)
         {
+            _configurationBuilder = configurationBuilder;
+            _loggerFactory = loggerFactory;
+        }
+        public List<ConfigEntity> ReadStream()
+        {
+            var logger = _loggerFactory.Logger;
             List<ConfigEntity> configEntityList = new List<ConfigEntity>();
 
-            var builder = new ConfigurationBuilder()
+            _configurationBuilder
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false);
 
-            var configuration = builder.Build();
+            var configuration = _configurationBuilder.Build();
             var section = configuration.GetSection("ConfigEntities");
             var childSection = section.GetChildren();
 

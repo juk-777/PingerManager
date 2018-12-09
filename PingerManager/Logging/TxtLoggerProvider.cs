@@ -1,11 +1,11 @@
 ﻿namespace PingerManager.Logging
 {
-    public class TxtLogger : ILoggerProvider
+    public class TxtLoggerProvider : ILoggerProvider
     {
         private readonly ITxtLoggerWriter _txtLoggerWriter;
         private readonly object _locker = new object();
 
-        public TxtLogger(ITxtLoggerWriter txtLoggerWriter)
+        public TxtLoggerProvider(ITxtLoggerWriter txtLoggerWriter)
         {
             _txtLoggerWriter = txtLoggerWriter;
         }

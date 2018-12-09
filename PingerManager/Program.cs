@@ -34,8 +34,8 @@ namespace PingerManager
                 CancellationToken token = cts.Token;
 
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
-                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLogger)));
-                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLogger)));
+                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLoggerProvider)));
+                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLoggerProvider)));
                 _logger = loggerFactory.Logger;
 
                 businessLogic.StartJob(token);

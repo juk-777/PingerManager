@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PingerManager.BusinessLogic;
 using PingerManager.Config;
 using PingerManager.Constructor;
@@ -12,11 +13,12 @@ namespace PingerManager
             .AddSingleton<IPingerBusinessLogic, PingerBusinessLogic>()
             .AddSingleton<IConfigReader, ConfigReader>()
             .AddSingleton<IConfigStream, AppSettingsStream>()
+            .AddSingleton<IConfigurationBuilder, ConfigurationBuilder>()
             .AddSingleton<IConfigVerifier, ConfigVerifier>()
             .AddSingleton<IPingBuilder, PingBuilder>()
             .AddSingleton<ILoggerFactory, LoggerFactory>()
-            .AddTransient<ILoggerProvider, ConsoleLogger>()
-            .AddTransient<ILoggerProvider, TxtLogger>()
+            .AddTransient<ILoggerProvider, ConsoleLoggerProvider>()
+            .AddTransient<ILoggerProvider, TxtLoggerProvider>()
             .AddSingleton<ITxtLoggerWriter>(w => new TxtLoggerWriter("log_pingers.txt"))
             .AddSingleton<ILogger, Logger>()
             .AddTransient<IProtocolProvider, IcmpPing>()
