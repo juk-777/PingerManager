@@ -9,16 +9,15 @@ namespace PingerManager.Config
     public class AppSettingsStream : IConfigStream
     {
         private readonly IConfigurationBuilder _configurationBuilder;
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
 
-        public AppSettingsStream(IConfigurationBuilder configurationBuilder, ILoggerFactory loggerFactory)
+        public AppSettingsStream(IConfigurationBuilder configurationBuilder, ILogger logger)
         {
             _configurationBuilder = configurationBuilder;
-            _loggerFactory = loggerFactory;
+            _logger = logger;
         }
         public List<ConfigEntity> ReadStream()
         {
-            var logger = _loggerFactory.Logger;
             List<ConfigEntity> configEntityList = new List<ConfigEntity>();
 
             _configurationBuilder
@@ -39,7 +38,7 @@ namespace PingerManager.Config
                 configEntityList.Add(configEntity);
             }
 
-            logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!", MainLogPath.LogPath));
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!", MainLogPath.LogPath));
             return configEntityList;
         }
     }

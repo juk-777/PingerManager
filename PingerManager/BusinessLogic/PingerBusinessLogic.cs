@@ -13,20 +13,18 @@ namespace PingerManager.BusinessLogic
         private readonly IConfigReader _configReader;
         private readonly IConfigVerifier _configVerifier;
         private readonly IPingBuilder _pingBuilder;
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly ILogger _logger;
 
-        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier, IPingBuilder pingBuilder, ILoggerFactory loggerFactory)
+        public PingerBusinessLogic(IConfigReader configReader, IConfigVerifier configVerifier, IPingBuilder pingBuilder, ILogger logger)
         {
             _configReader = configReader;
             _configVerifier = configVerifier;
             _pingBuilder = pingBuilder;
-            _loggerFactory = loggerFactory;
+            _logger = logger;
         }
 
         public async Task StartJob(CancellationToken token)
         {
-            var logger = _loggerFactory.Logger;
-
             try
             {
                 if (token.IsCancellationRequested)
@@ -41,7 +39,7 @@ namespace PingerManager.BusinessLogic
             }
             catch (Exception e)
             {
-                logger.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
+                _logger.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
                 throw;
             }
         }
