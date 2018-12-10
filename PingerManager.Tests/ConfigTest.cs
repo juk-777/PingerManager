@@ -8,7 +8,7 @@ using Assert = NUnit.Framework.Assert;
 namespace PingerManager.Tests
 {
     [TestClass]
-    public class PingerManagerConfigTest
+    public class ConfigTest
     {
         private ConfigEntity ConfigEntity { get; set; }
 

@@ -2,30 +2,29 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using PingerManager.Config;
 
 namespace PingerManager.Constructor
 {
     public class HttpPing : IProtocolProvider
     {
-        public async Task<PingReply> Ping(DateTime pingDate, ConfigEntity configEntity)
+        public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
         {
-            var request = (HttpWebRequest)WebRequest.Create(new UriBuilder(configEntity.Host).Uri);
-            request.Timeout = (int)TimeSpan.FromSeconds(configEntity.Period).TotalMilliseconds;
+            var request = (HttpWebRequest)WebRequest.Create(new UriBuilder(pingEntity.ConfigEntity.Host).Uri);
+            request.Timeout = (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds;
 
             try
             {
                 using (var reply = (HttpWebResponse)await request.GetResponseAsync())
                 {
-                    if (reply.StatusCode == (HttpStatusCode)configEntity.ValidStatusCode)
-                        return new PingReply(pingDate, configEntity, IPStatus.Success);
+                    if (reply.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode)
+                        return new PingReply(pingDate, pingEntity, IPStatus.Success);
 
-                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
+                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
             }
             catch (WebException)
             {
-                return new PingReply(pingDate, configEntity, IPStatus.BadOption);
+                return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace PingerManager.Constructor
             }
         }
 
-        private void BuildPing(ConfigEntity configEntity)
+        public void BuildPing(ConfigEntity configEntity)
         {
             var protocolProviders = _serviceProvider.GetServices<IProtocolProvider>().ToList();
             PingEntity pingEntity;
@@ -73,8 +73,8 @@ namespace PingerManager.Constructor
 
             try
             {
-                var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity.ConfigEntity);
-                _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.ConfigEntity.Host + " " + reply.Status, reply.ConfigEntity.LogPath));
+                var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
+                _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
             }
             catch
             {

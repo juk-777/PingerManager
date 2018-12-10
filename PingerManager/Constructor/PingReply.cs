@@ -1,5 +1,4 @@
-﻿using PingerManager.Config;
-using System;
+﻿using System;
 using System.Net.NetworkInformation;
 
 namespace PingerManager.Constructor
@@ -7,13 +6,13 @@ namespace PingerManager.Constructor
     public class PingReply : EventArgs
     {
         public DateTime PingDate { get; }
-        public ConfigEntity ConfigEntity { get; }
+        public PingEntity PingEntity { get; }
         public IPStatus Status { get; }
 
-        public PingReply(DateTime pingDate, ConfigEntity configEntity, IPStatus status)
+        public PingReply(DateTime pingDate, PingEntity pingEntity, IPStatus status)
         {
             PingDate = pingDate;
-            ConfigEntity = configEntity;
+            PingEntity = pingEntity;
             Status = status;
         }
     }

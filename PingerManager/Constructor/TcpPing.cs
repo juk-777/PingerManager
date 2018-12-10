@@ -2,28 +2,27 @@
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using PingerManager.Config;
 
 namespace PingerManager.Constructor
 {
     public class TcpPing : IProtocolProvider
     {
-        public async Task<PingReply> Ping(DateTime pingDate, ConfigEntity configEntity)
+        public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
         {
             using (TcpClient tcpClient = new TcpClient())
             {
                 try
                 {
-                    await tcpClient.ConnectAsync(new UriBuilder(configEntity.Host).Host, configEntity.Port);
+                    await tcpClient.ConnectAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, pingEntity.ConfigEntity.Port);
 
                     if (tcpClient.Connected)
-                        return new PingReply(pingDate, configEntity, IPStatus.Success);
+                        return new PingReply(pingDate, pingEntity, IPStatus.Success);
 
-                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
+                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
                 catch (Exception)
                 {
-                    return new PingReply(pingDate, configEntity, IPStatus.BadOption);
+                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
             }
         }
