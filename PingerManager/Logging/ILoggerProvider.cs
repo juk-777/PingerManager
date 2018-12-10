@@ -2,6 +2,6 @@
 {
     public interface ILoggerProvider
     {
-        void Log(MessageType messageType, string message);
+        void Log(LogParams logParams);
     }
 }

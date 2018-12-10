@@ -12,9 +12,9 @@ namespace PingerManager.Logging
             Providers = new List<ILoggerProvider>();
         }
 
-        public void Log(MessageType messageType, string message)
+        public void Log(LogParams logParams)
         {
-            Providers.ForEach(async p => await Task.Run(() => p.Log(messageType, message)));
+            Providers.ForEach(async p => await Task.Run(() => p.Log(logParams)));
         }
     }
 

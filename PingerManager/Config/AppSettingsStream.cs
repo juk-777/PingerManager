@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using PingerManager.Logging;
@@ -25,8 +26,12 @@ namespace PingerManager.Config
                 .AddJsonFile("appsettings.json", false);
 
             var configuration = _configurationBuilder.Build();
-            var section = configuration.GetSection("ConfigEntities");
-            var childSection = section.GetChildren();
+
+            var sectionMainLogPath = configuration.GetSection("MainLogPath");
+            sectionMainLogPath.Get<MainLogPath>();
+            
+            var sectionConfigEntity = configuration.GetSection("ConfigEntities");
+            var childSection = sectionConfigEntity.GetChildren();
 
             foreach (var child in childSection)
             {
@@ -34,7 +39,7 @@ namespace PingerManager.Config
                 configEntityList.Add(configEntity);
             }
 
-            logger.Log(MessageType.Info, "Конфигурация считана!");
+            logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!", MainLogPath.LogPath));
             return configEntityList;
         }
     }

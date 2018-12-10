@@ -2,6 +2,6 @@
 {
     public interface ITxtLoggerWriter
     {
-        void Write(MessageType messageType, string message);
+        void Write(LogParams logParams);
     }
 }

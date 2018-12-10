@@ -4,9 +4,9 @@ namespace PingerManager.Logging
 {
     public class ConsoleLoggerProvider : ILoggerProvider
     {
-        public void Log(MessageType messageType, string message)
+        public void Log(LogParams logParams)
         {
-            Console.WriteLine(messageType + ": " + message);
+            Console.WriteLine(logParams.MessageType + ": " + logParams.Message);
         }
     }
 }

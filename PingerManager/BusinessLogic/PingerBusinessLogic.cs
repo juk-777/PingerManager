@@ -29,21 +29,19 @@ namespace PingerManager.BusinessLogic
 
             try
             {
-                logger.Log(MessageType.Info, "Запуск работы ...");
-
                 if (token.IsCancellationRequested)
                     return;
 
                 List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
                 if (!await Task.Run(() => _configVerifier.Verify(configEntityList), token))
-                    throw new ArgumentException("Проверка завершена с ошибкой!");
+                    throw new ArgumentException(DateTime.Now + " " + "Проверка завершена с ошибкой!");
 
                 await Task.Run(() => _pingBuilder.Start(configEntityList), token);
             }
             catch (Exception e)
             {
-                logger.Log(MessageType.Error, e.Message);
+                logger.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
                 throw;
             }
         }

@@ -10,11 +10,11 @@
             _txtLoggerWriter = txtLoggerWriter;
         }
 
-        public void Log(MessageType messageType, string message)
+        public void Log(LogParams logParams)
         {
             lock (_locker)
             {
-                _txtLoggerWriter.Write(messageType, message);
+                _txtLoggerWriter.Write(logParams);
             }
         }
     }

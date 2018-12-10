@@ -5,17 +5,11 @@ namespace PingerManager.Logging
 {
     public class TxtLoggerWriter : ITxtLoggerWriter
     {
-        private readonly string _logPath;
-
-        public TxtLoggerWriter(string logPath)
+        public void Write(LogParams logParams)
         {
-            _logPath = logPath;
-        }
-        public void Write(MessageType messageType, string message)
-        {
-            string writePath = Path.Combine(_logPath);
+            string writePath = Path.Combine(logParams.LogPath);
             StringBuilder strLog = new StringBuilder();
-            strLog.Append(messageType + ": " + message);
+            strLog.Append(logParams.MessageType + ": " + logParams.Message);
             
             using (StreamWriter sw = new StreamWriter(writePath, true, Encoding.Default))
             {

@@ -1,4 +1,5 @@
 ﻿using PingerManager.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -15,38 +16,38 @@ namespace PingerManager.Config
         public bool Verify(List<ConfigEntity> configEntityList)
         {
             var logger = _loggerFactory.Logger;
-            logger.Log(MessageType.Info, "Проверка конфигурации ...");
+            logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка конфигурации ...", MainLogPath.LogPath));
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
                 if (string.IsNullOrEmpty(configEntity.Host))
                 {
-                    logger.Log(MessageType.Error, "Хост не задан!");
+                    logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Хост не задан!", MainLogPath.LogPath));
                     return false;
                 }
 
                 string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
                 {
-                    logger.Log(MessageType.Error, $"Хост {configEntity.Host} задан не корректно!");
+                    logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Хост {configEntity.Host} задан не корректно!", MainLogPath.LogPath));
                     return false;
                 }
 
                 if (configEntity.Period <= 0)
                 {
-                    logger.Log(MessageType.Error, "Период задан неверно!");
+                    logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Период задан неверно!", MainLogPath.LogPath));
                     return false;
                 }
 
                 if (string.IsNullOrEmpty(configEntity.Protocol))
                 {
-                    logger.Log(MessageType.Error, "Протокол не задан!");
+                    logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Протокол не задан!", MainLogPath.LogPath));
                     return false;
                 }
 
                 if (configEntity.Protocol != "ICMP" && configEntity.Protocol != "HTTP" && configEntity.Protocol != "TCP")
                 {
-                    logger.Log(MessageType.Error, $"Протокол: { configEntity.Protocol} не поддерживается!");
+                    logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Протокол: { configEntity.Protocol} не поддерживается!", MainLogPath.LogPath));
                     return false;
                 }
 
@@ -54,7 +55,7 @@ namespace PingerManager.Config
                 {
                     if (configEntity.Port < 0)
                     {
-                        logger.Log(MessageType.Error, "Порт задан неверно!");
+                        logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Порт задан неверно!", MainLogPath.LogPath));
                         return false;
                     }
                 }
@@ -63,13 +64,13 @@ namespace PingerManager.Config
                 {
                     if (configEntity.ValidStatusCode < 0)
                     {
-                        logger.Log(MessageType.Error, "Валидный статус код задан неверно!");
+                        logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Валидный статус код задан неверно!", MainLogPath.LogPath));
                         return false;
                     }
                 }
             }
 
-            logger.Log(MessageType.Info, "Проверка завершена успешно!");
+            logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка завершена успешно!", MainLogPath.LogPath));
             return true;
         }
     }

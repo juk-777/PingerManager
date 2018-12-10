@@ -26,10 +26,11 @@ namespace PingerManager.Constructor
         public void Start(List<ConfigEntity> configEntityList)
         {
             _logger = _loggerFactory.Logger;
-            _logger.Log(MessageType.Info, "Запускаем Pinger ...");
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ...", MainLogPath.LogPath));
 
             foreach (ConfigEntity configEntity in configEntityList)
             {
+                _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol, MainLogPath.LogPath));
                 Task.Run(() => BuildPing(configEntity));
             }
         }
@@ -53,12 +54,12 @@ namespace PingerManager.Constructor
                         pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = protocolProviders.First(o => o.GetType() == typeof(HttpPing)) };
                         break;
                     default:
-                        throw new ArgumentException("Протокол не поддерживается!");
+                        throw new ArgumentException(DateTime.Now + " " + "Протокол не поддерживается!");
                 }
             }
             catch (ArgumentException e)
             {
-                _logger.Log(MessageType.Error, e.Message);
+                _logger.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath));
                 throw;
             }
 
@@ -75,11 +76,11 @@ namespace PingerManager.Constructor
             try
             {
                 var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity.ConfigEntity);
-                _logger.Log(MessageType.Info, reply.PingDate + " " + reply.ConfigEntity.Host + " " + reply.Status);
+                _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.ConfigEntity.Host + " " + reply.Status, reply.ConfigEntity.LogPath));
             }
             catch
             {
-                _logger.Log(MessageType.Error, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption);
+                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption, pingEntity.ConfigEntity.LogPath));
             }
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using PingerManager.Logging;
 using System.Linq;
+using PingerManager.Config;
 
 namespace PingerManager
 {
@@ -43,11 +44,11 @@ namespace PingerManager
                 Console.ReadLine();
                 cts.Cancel();
 
-                _logger?.Log(MessageType.Info, "Завершение работы ...");
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...", MainLogPath.LogPath));
             }
             catch (Exception e)
             {
-                _logger?.Log(MessageType.Error, e.Message);
+                _logger?.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
                 throw;
             }
             finally
