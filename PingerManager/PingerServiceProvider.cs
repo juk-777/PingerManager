@@ -24,6 +24,7 @@ namespace PingerManager
             .AddTransient<IProtocolProvider, IcmpPing>()
             .AddTransient<IProtocolProvider, TcpPing>()
             .AddTransient<IProtocolProvider, HttpPing>()
+            .AddSingleton<IProtocolProviderManager, ProtocolProviderManager>()
             .BuildServiceProvider();
     }
 }
