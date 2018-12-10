@@ -8,7 +8,7 @@ using PingerManager.Logging;
 
 namespace PingerManager.BusinessLogic
 {
-    class PingerBusinessLogic : IPingerBusinessLogic
+    public class PingerBusinessLogic : IPingerBusinessLogic
     {
         private readonly IConfigReader _configReader;
         private readonly IConfigVerifier _configVerifier;

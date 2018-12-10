@@ -6,7 +6,7 @@ using PingerManager.Logging;
 
 namespace PingerManager.Config
 {
-    class AppSettingsStream : IConfigStream
+    public class AppSettingsStream : IConfigStream
     {
         private readonly IConfigurationBuilder _configurationBuilder;
         private readonly ILoggerFactory _loggerFactory;

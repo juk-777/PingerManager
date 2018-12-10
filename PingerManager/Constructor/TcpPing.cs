@@ -6,7 +6,7 @@ using PingerManager.Config;
 
 namespace PingerManager.Constructor
 {
-    class TcpPing : IProtocolProvider
+    public class TcpPing : IProtocolProvider
     {
         public async Task<PingReply> Ping(DateTime pingDate, ConfigEntity configEntity)
         {

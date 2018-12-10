@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace PingerManager.Config
 {
-    class ConfigVerifier : IConfigVerifier
+    public class ConfigVerifier : IConfigVerifier
     {
         private readonly ILoggerFactory _loggerFactory;
 
