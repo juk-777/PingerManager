@@ -1,10 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PingerManager.Config;
 using PingerManager.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using Assert = NUnit.Framework.Assert;
 
 namespace PingerManager.Tests
@@ -13,14 +11,6 @@ namespace PingerManager.Tests
     public class PingerManagerConfigTest
     {
         private ConfigEntity ConfigEntity { get; set; }
-        //private LogParams LogParams { get; set; }
-        private MainLogPath MainLogPath { get; set; }
-        //private readonly ServiceProvider _serviceProvider;
-
-        //public PingerManagerConfigTest()
-        //{
-        //    _serviceProvider = PingerServiceProvider.ServiceProvider;
-        //}
 
         [TestInitialize]
         public void TestInitialize()
@@ -34,9 +24,6 @@ namespace PingerManager.Tests
                 ValidStatusCode = 0,
                 LogPath = "log_1.txt"
             };
-
-            MainLogPath = new MainLogPath();
-            MainLogPath.LogPath = "log_main.txt";
         }
 
         [TestMethod]
@@ -86,5 +73,104 @@ namespace PingerManager.Tests
             Assert.True(result);
         }
 
+        [TestMethod]
+        public void Verify_Config_Host_Is_Null()
+        {
+            ConfigEntity.Host = null;
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Not_Correct_Host()
+        {
+            ConfigEntity.Host = "ya@ru";
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Not_Correct_Period()
+        {
+            ConfigEntity.Period = 0;
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Protocol_Is_Null()
+        {
+            ConfigEntity.Protocol = null;
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Not_Correct_Protocol()
+        {
+            ConfigEntity.Protocol = "ICMPP";
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Not_Correct_Port()
+        {
+            ConfigEntity.Protocol = "TCP";
+            ConfigEntity.Port = -1;
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
+
+        [TestMethod]
+        public void Verify_Config_Not_Correct_ValidStatusCode()
+        {
+            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.ValidStatusCode = -1;
+            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var result = configVerifier.Verify(configEntityList);
+
+            Assert.False(result);
+        }
     }
 }
