@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PingerManager.Config;
 using PingerManager.Logging;
@@ -34,7 +35,11 @@ namespace PingerManager.Tests
                 .Setup(x => x.ReadStream())
                 .Returns(It.IsAny<List<ConfigEntity>>());
 
-            var configReader = new ConfigReader(mockConfigStream.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigReader>(p => new ConfigReader(mockConfigStream.Object))
+                .BuildServiceProvider();
+
+            var configReader = serviceProvider.GetService<IConfigReader>();
             configReader.ReadConfig();
 
             mockConfigStream.VerifyAll();
@@ -49,7 +54,11 @@ namespace PingerManager.Tests
                 .Setup(x => x.ReadStream())
                 .Returns(configEntityListExp);
 
-            var configReader = new ConfigReader(mockConfigStream.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigReader>(p => new ConfigReader(mockConfigStream.Object))
+                .BuildServiceProvider();
+
+            var configReader = serviceProvider.GetService<IConfigReader>();
             IList<ConfigEntity> configEntityList = configReader.ReadConfig();
 
             Assert.AreEqual(configEntityListExp[0].Host, configEntityList[0].Host);
@@ -67,7 +76,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.True(result);
@@ -81,7 +94,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -95,7 +112,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -109,7 +130,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -123,7 +148,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -137,7 +166,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -152,7 +185,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
@@ -167,7 +204,11 @@ namespace PingerManager.Tests
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
 
-            var configVerifier = new ConfigVerifier(mockLogger.Object);
+            var serviceProvider = new ServiceCollection()
+                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
+                .BuildServiceProvider();
+
+            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
             var result = configVerifier.Verify(configEntityList);
 
             Assert.False(result);
