@@ -32,7 +32,7 @@ namespace PingerManager.Constructor
             }
         }
 
-        public void BuildPing(ConfigEntity configEntity)
+        private void BuildPing(ConfigEntity configEntity)
         {
             var pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = _protocolProviderManager.GetProvider(configEntity) };
             Ping(pingEntity);

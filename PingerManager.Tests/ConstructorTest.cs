@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PingerManager.Config;
 using PingerManager.Constructor;
@@ -11,12 +14,6 @@ namespace PingerManager.Tests
     public class ConstructorTest
     {
         private ConfigEntity ConfigEntity { get; set; }
-        //private ServiceProvider _serviceProvider;
-
-        //public ConstructorTest()
-        //{
-        //    _serviceProvider = PingerServiceProvider.ServiceProvider;
-        //}
 
         [TestInitialize]
         public void TestInitialize()
@@ -33,19 +30,111 @@ namespace PingerManager.Tests
         }
 
         [TestMethod]
-        public void PingBuilder_ICMP_Provider_Is_Set()
+        public void ProtocolProviderManager_ICMP_Provider_Is_Set()
         {
             ConfigEntity.Protocol = "ICMP";
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
-            var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
 
             var protocolProviderManager = new ProtocolProviderManager(mockLogger.Object);
             var protocolProvider = protocolProviderManager.GetProvider(ConfigEntity);
-            var pingBuilder = new PingBuilder(mockLogger.Object, mockProtocolProviderManager.Object);
-            pingBuilder.BuildPing(ConfigEntity);
 
             Assert.IsInstanceOf<IcmpPing>(protocolProvider);
+        }
+
+        [TestMethod]
+        public void ProtocolProviderManager_TCP_Provider_Is_Set()
+        {
+            ConfigEntity.Protocol = "TCP";
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var protocolProviderManager = new ProtocolProviderManager(mockLogger.Object);
+            var protocolProvider = protocolProviderManager.GetProvider(ConfigEntity);
+
+            Assert.IsInstanceOf<TcpPing>(protocolProvider);
+        }
+
+        [TestMethod]
+        public void ProtocolProviderManager_HTTP_Provider_Is_Set()
+        {
+            ConfigEntity.Protocol = "HTTP";
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+
+            var protocolProviderManager = new ProtocolProviderManager(mockLogger.Object);
+            var protocolProvider = protocolProviderManager.GetProvider(ConfigEntity);
+
+            Assert.IsInstanceOf<HttpPing>(protocolProvider);
+        }
+
+        [TestMethod]
+        public async Task HTTP_Ping_Return_BadOption_Status_When_ValidStatusCode_Is_Not_200()
+        {
+            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.ValidStatusCode = 201;
+            var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
+            mockProtocolProviderManager
+                .Setup(x => x.GetProvider(It.IsAny<ConfigEntity>()))
+                .Returns(new HttpPing());
+
+            var pingEntity = new PingEntity
+            {
+                ConfigEntity = ConfigEntity,
+                ProtocolProvider = mockProtocolProviderManager.Object.GetProvider(It.IsAny<ConfigEntity>())
+            };
+
+            var httpPing = new HttpPing();
+            var pingReply = await httpPing.Ping(DateTime.Now, pingEntity);
+
+            Assert.AreEqual(IPStatus.BadOption, pingReply.Status);
+        }
+
+        [TestMethod]
+        public async Task Benchmark_Test_Yandex_HTTP_Ping_Return_Success_Status_When_ValidStatusCode_Is_200()
+        {
+            ConfigEntity.Host = "ya.ru";
+            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.ValidStatusCode = 200;
+
+            var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
+            mockProtocolProviderManager
+                .Setup(x => x.GetProvider(It.IsAny<ConfigEntity>()))
+                .Returns(new HttpPing());
+
+            var pingEntity = new PingEntity
+            {
+                ConfigEntity = ConfigEntity,
+                ProtocolProvider = mockProtocolProviderManager.Object.GetProvider(It.IsAny<ConfigEntity>())
+            };
+
+            var httpPing = new HttpPing();
+            var pingReply = await httpPing.Ping(DateTime.Now, pingEntity);
+
+            Assert.AreEqual(IPStatus.Success, pingReply.Status);
+        }
+
+        [TestMethod]
+        public async Task Benchmark_Test_Yandex_ICMP_Ping_Return_Success_Status()
+        {
+            ConfigEntity.Host = "ya.ru";
+            ConfigEntity.Protocol = "ICMP";
+
+            var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
+            mockProtocolProviderManager
+                .Setup(x => x.GetProvider(It.IsAny<ConfigEntity>()))
+                .Returns(new IcmpPing());
+
+            var pingEntity = new PingEntity
+            {
+                ConfigEntity = ConfigEntity,
+                ProtocolProvider = mockProtocolProviderManager.Object.GetProvider(It.IsAny<ConfigEntity>())
+            };
+
+            var icmpPing = new IcmpPing();
+            var pingReply = await icmpPing.Ping(DateTime.Now, pingEntity);
+
+            Assert.AreEqual(IPStatus.Success, pingReply.Status);
         }
     }
 }
