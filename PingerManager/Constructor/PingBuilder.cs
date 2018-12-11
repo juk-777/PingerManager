@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Threading;
-using System.Threading.Tasks;
 using PingerManager.Config;
 using PingerManager.Logging;
 
@@ -13,7 +12,6 @@ namespace PingerManager.Constructor
         private readonly ILogger _logger;
         private readonly IProtocolProviderManager _protocolProviderManager;
         private readonly List<Timer> _timers = new List<Timer>();
-        
 
         public PingBuilder(ILogger logger, IProtocolProviderManager protocolProviderManager)
         {
@@ -21,21 +19,20 @@ namespace PingerManager.Constructor
             _protocolProviderManager = protocolProviderManager;
         }
 
-        public void Start(List<ConfigEntity> configEntityList)
+        public void Start(IEnumerable<ConfigEntity> configEntityList)
         {
             _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ...", MainLogPath.LogPath));
 
-            foreach (ConfigEntity configEntity in configEntityList)
+            foreach (var configEntity in configEntityList)
             {
                 _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol, MainLogPath.LogPath));
-                Task.Run(() => BuildPing(configEntity));
+                BuildPing(configEntity);
             }
         }
 
         private void BuildPing(ConfigEntity configEntity)
         {
             var pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = _protocolProviderManager.GetProvider(configEntity) };
-            Ping(pingEntity);
 
             TimerCallback tm = Ping;
             _timers.Add(new Timer(tm, pingEntity, 0, (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds));

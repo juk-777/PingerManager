@@ -6,6 +6,6 @@ namespace PingerManager.Constructor
 {
     public interface IPingBuilder : IDisposable
     {
-        void Start(List<ConfigEntity> configEntityList);
+        void Start(IEnumerable<ConfigEntity> configEntityList);
     }
 }

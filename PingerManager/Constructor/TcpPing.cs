@@ -9,7 +9,7 @@ namespace PingerManager.Constructor
     {
         public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
         {
-            using (TcpClient tcpClient = new TcpClient())
+            using (var tcpClient = new TcpClient())
             {
                 try
                 {

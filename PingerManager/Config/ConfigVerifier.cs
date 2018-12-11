@@ -13,11 +13,11 @@ namespace PingerManager.Config
         {
             _logger = logger;
         }
-        public bool Verify(List<ConfigEntity> configEntityList)
+        public bool Verify(IEnumerable<ConfigEntity> configEntityList)
         {
             _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка конфигурации ...", MainLogPath.LogPath));
 
-            foreach (ConfigEntity configEntity in configEntityList)
+            foreach (var configEntity in configEntityList)
             {
                 if (string.IsNullOrEmpty(configEntity.Host))
                 {

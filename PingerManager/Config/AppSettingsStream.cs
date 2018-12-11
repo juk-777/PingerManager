@@ -18,7 +18,7 @@ namespace PingerManager.Config
         }
         public List<ConfigEntity> ReadStream()
         {
-            List<ConfigEntity> configEntityList = new List<ConfigEntity>();
+            var configEntityList = new List<ConfigEntity>();
 
             _configurationBuilder
                 .SetBasePath(Directory.GetCurrentDirectory())

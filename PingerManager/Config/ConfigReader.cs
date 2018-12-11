@@ -13,7 +13,7 @@ namespace PingerManager.Config
 
         public List<ConfigEntity> ReadConfig()
         {
-            List<ConfigEntity> configEntityList = _configStream.ReadStream();
+            var configEntityList = _configStream.ReadStream();
 
             return configEntityList;
         }

@@ -4,6 +4,6 @@ namespace PingerManager.Config
 {
     public interface IConfigVerifier
     {
-        bool Verify(List<ConfigEntity> configEntityList);
+        bool Verify(IEnumerable<ConfigEntity> configEntityList);
     }
 }

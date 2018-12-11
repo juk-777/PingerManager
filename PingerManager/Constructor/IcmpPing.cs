@@ -8,7 +8,7 @@ namespace PingerManager.Constructor
     {
         public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
         {
-            using (Ping ping = new Ping())
+            using (var ping = new Ping())
             {
                 var reply = await ping
                     .SendPingAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds);

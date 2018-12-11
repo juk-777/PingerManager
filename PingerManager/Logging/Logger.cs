@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PingerManager.Logging
 {
@@ -14,7 +13,7 @@ namespace PingerManager.Logging
 
         public void Log(LogParams logParams)
         {
-            Providers.ForEach(async p => await Task.Run(() => p.Log(logParams)));
+            Providers.ForEach(p => p.Log(logParams));
         }
     }
 

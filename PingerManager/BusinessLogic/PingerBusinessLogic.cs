@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
@@ -30,16 +29,16 @@ namespace PingerManager.BusinessLogic
                 if (token.IsCancellationRequested)
                     return;
 
-                List<ConfigEntity> configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
+                var configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
                 if (!await Task.Run(() => _configVerifier.Verify(configEntityList), token))
-                    throw new ArgumentException(DateTime.Now + " " + "Проверка завершена с ошибкой!");
+                    throw new ArgumentException("Проверка завершена с ошибкой!");
 
                 await Task.Run(() => _pingBuilder.Start(configEntityList), token);
             }
             catch (Exception e)
             {
-                _logger.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
+                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + e.Message, MainLogPath.LogPath ?? "log_main.txt"));
                 throw;
             }
         }

@@ -8,11 +8,11 @@ using PingerManager.Config;
 
 namespace PingerManager
 {
-    static class Program
+    internal static class Program
     {
         private static ILogger _logger;
 
-        static void Main()
+        private static void Main()
         {
             #region Приветствие
 
@@ -31,8 +31,8 @@ namespace PingerManager
 
             try
             {
-                CancellationTokenSource cts = new CancellationTokenSource();
-                CancellationToken token = cts.Token;
+                var cts = new CancellationTokenSource();
+                var token = cts.Token;
 
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLoggerProvider)));
@@ -44,7 +44,7 @@ namespace PingerManager
                 Console.ReadLine();
                 cts.Cancel();
 
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...", MainLogPath.LogPath));
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...", MainLogPath.LogPath ?? "log_main.txt"));
             }
             catch (Exception e)
             {
