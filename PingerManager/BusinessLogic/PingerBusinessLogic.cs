@@ -26,15 +26,23 @@ namespace PingerManager.BusinessLogic
         {
             try
             {
-                if (token.IsCancellationRequested)
-                    return;
-
+                token.ThrowIfCancellationRequested();
                 var configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
 
+                token.ThrowIfCancellationRequested();
                 if (!await Task.Run(() => _configVerifier.Verify(configEntityList), token))
                     throw new ArgumentException("Проверка завершена с ошибкой!");
 
-                await Task.Run(() => _pingBuilder.Start(configEntityList), token);
+                token.ThrowIfCancellationRequested();
+                await Task.Run(() => _pingBuilder.Start(configEntityList, token), token);
+            }
+            catch (TaskCanceledException)
+            {
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob до её запуска ...", MainLogPath.LogPath ?? "log_main.txt"));
+            }
+            catch (OperationCanceledException)
+            {
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob ...", MainLogPath.LogPath ?? "log_main.txt"));
             }
             catch (Exception e)
             {

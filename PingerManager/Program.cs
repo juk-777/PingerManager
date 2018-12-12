@@ -14,12 +14,14 @@ namespace PingerManager
 
         private static void Main()
         {
-            #region Приветствие
+            #region Hello
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Добро пожаловать в PingerManager!");
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\nДля запуска работы нажмите Enter");
-            Console.WriteLine("Для завершения работы нажмите Enter");
+            Console.WriteLine("\nДля запуска работы нажмите <Enter>");
+            Console.WriteLine("Для отмены - нажмите <C>");
+            Console.WriteLine("Для завершения работы нажмите <Enter>");
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
 
@@ -28,12 +30,11 @@ namespace PingerManager
             var serviceProvider = PingerServiceProvider.ServiceProvider;
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
             var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
 
             try
             {
-                var cts = new CancellationTokenSource();
-                var token = cts.Token;
-
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLoggerProvider)));
                 loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLoggerProvider)));
@@ -41,8 +42,17 @@ namespace PingerManager
 
                 businessLogic.StartJob(token);
 
-                Console.ReadLine();
-                cts.Cancel();
+                var ch = Console.ReadKey(true).KeyChar;
+                if (ch == 'c' || ch == 'C')
+                {
+                    cts.Cancel();
+                    _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...", MainLogPath.LogPath ?? "log_main.txt"));
+                }
+
+                if (ch != '\r')
+                {
+                    while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+                }
 
                 _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...", MainLogPath.LogPath ?? "log_main.txt"));
             }
@@ -54,11 +64,17 @@ namespace PingerManager
             finally
             {
                 businessLogic.Dispose();
+                cts.Dispose();
                 serviceProvider.Dispose();
             }
 
+            #region Goodbye
+
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("До скорой встречи в PingerManager!");
             Console.ReadLine();
+
+            #endregion
         }
     }
 }

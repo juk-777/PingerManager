@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Threading;
+using System.Threading.Tasks;
 using PingerManager.Config;
 using PingerManager.Logging;
 
@@ -12,6 +13,7 @@ namespace PingerManager.Constructor
         private readonly ILogger _logger;
         private readonly IProtocolProviderManager _protocolProviderManager;
         private readonly List<Timer> _timers = new List<Timer>();
+        private CancellationToken _token;
 
         public PingBuilder(ILogger logger, IProtocolProviderManager protocolProviderManager)
         {
@@ -19,8 +21,9 @@ namespace PingerManager.Constructor
             _protocolProviderManager = protocolProviderManager;
         }
 
-        public void Start(IEnumerable<ConfigEntity> configEntityList)
+        public void Start(IEnumerable<ConfigEntity> configEntityList, CancellationToken token)
         {
+            _token = token;
             _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ...", MainLogPath.LogPath));
 
             foreach (var configEntity in configEntityList)
@@ -44,12 +47,33 @@ namespace PingerManager.Constructor
 
             try
             {
-                var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
-                _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
+                _token.ThrowIfCancellationRequested();
+
+                try
+                {
+                    var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
+
+                    _logger.Log(new LogParams(MessageType.Info,
+                        reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status,
+                        reply.PingEntity.ConfigEntity.LogPath));
+                }
+                catch (Exception)
+                {
+                    _logger.Log(new LogParams(MessageType.Error,
+                        DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption,
+                        pingEntity.ConfigEntity.LogPath));
+                }
+
             }
-            catch
+            catch (TaskCanceledException)
             {
-                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption, pingEntity.ConfigEntity.LogPath));
+                Dispose();
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
+            }
+            catch (OperationCanceledException)
+            {
+                Dispose();
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
             }
         }
 
