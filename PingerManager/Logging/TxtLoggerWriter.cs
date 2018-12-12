@@ -1,13 +1,14 @@
 ﻿using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace PingerManager.Logging
 {
     public class TxtLoggerWriter : ITxtLoggerWriter
     {
-        public async void Write(LogParams logParams)
+        public async Task Write(LogParams logParams)
         {
-            string writePath = Path.Combine(logParams.LogPath);
+            var writePath = Path.Combine(logParams.LogPath);
             var strLog = new StringBuilder();
             strLog.Append(logParams.MessageType + ": " + logParams.Message);
             

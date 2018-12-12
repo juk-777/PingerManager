@@ -13,7 +13,7 @@ namespace PingerManager.Logging
 
         public void Log(LogParams logParams)
         {
-            Providers.ForEach(p => p.Log(logParams));
+            Providers.ForEach(async p => await p.Log(logParams));
         }
     }
 

@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace PingerManager.Logging
 {
     public class ConsoleLoggerProvider : ILoggerProvider
     {
-        public void Log(LogParams logParams)
+        public async Task Log(LogParams logParams)
         {
-            Console.WriteLine(logParams.MessageType + ": " + logParams.Message);
+            await Task.Run(() => Console.WriteLine(logParams.MessageType + ": " + logParams.Message));
         }
     }
 }

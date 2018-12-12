@@ -43,7 +43,7 @@ namespace PingerManager
                 businessLogic.StartJob(token);
 
                 var ch = Console.ReadKey(true).KeyChar;
-                if (ch == 'c' || ch == 'C')
+                if (ch == 'c' || ch == 'C' || ch == 'с' || ch == 'С')
                 {
                     cts.Cancel();
                     _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...", MainLogPath.LogPath ?? "log_main.txt"));
@@ -72,6 +72,7 @@ namespace PingerManager
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("До скорой встречи в PingerManager!");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
 
             #endregion

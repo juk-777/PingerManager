@@ -1,7 +1,9 @@
-﻿namespace PingerManager.Logging
+﻿using System.Threading.Tasks;
+
+namespace PingerManager.Logging
 {
     public interface ILoggerProvider
     {
-        void Log(LogParams logParams);
+        Task Log(LogParams logParams);
     }
 }

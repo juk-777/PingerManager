@@ -1,7 +1,9 @@
-﻿namespace PingerManager.Logging
+﻿using System.Threading.Tasks;
+
+namespace PingerManager.Logging
 {
     public interface ITxtLoggerWriter
     {
-        void Write(LogParams logParams);
+        Task Write(LogParams logParams);
     }
 }

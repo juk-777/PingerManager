@@ -22,19 +22,19 @@ namespace PingerManager.BusinessLogic
             _logger = logger;
         }
 
-        public async Task StartJob(CancellationToken token)
+        public void StartJob(CancellationToken token)
         {
             try
             {
                 token.ThrowIfCancellationRequested();
-                var configEntityList = await Task.Run(() => _configReader.ReadConfig(), token);
+                var configEntityList = _configReader.ReadConfig();
 
                 token.ThrowIfCancellationRequested();
-                if (!await Task.Run(() => _configVerifier.Verify(configEntityList), token))
+                if (! _configVerifier.Verify(configEntityList))
                     throw new ArgumentException("Проверка завершена с ошибкой!");
 
                 token.ThrowIfCancellationRequested();
-                await Task.Run(() => _pingBuilder.Start(configEntityList, token), token);
+                _pingBuilder.Start(configEntityList, token);
             }
             catch (TaskCanceledException)
             {
