@@ -53,13 +53,13 @@ namespace PingerManager.Constructor
                 {
                     var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
 
-                    _logger.Log(new LogParams(MessageType.Info,
+                    await _logger.Log(new LogParams(MessageType.Info,
                         reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status,
                         reply.PingEntity.ConfigEntity.LogPath));
                 }
                 catch (Exception)
                 {
-                    _logger.Log(new LogParams(MessageType.Error,
+                    await _logger.Log(new LogParams(MessageType.Error,
                         DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption,
                         pingEntity.ConfigEntity.LogPath));
                 }
