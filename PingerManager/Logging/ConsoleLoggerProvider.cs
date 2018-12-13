@@ -7,7 +7,8 @@ namespace PingerManager.Logging
     {
         public async Task Log(LogParams logParams)
         {
-            await Task.Run(() => Console.WriteLine(logParams.MessageType + ": " + logParams.Message));
+            Console.WriteLine(logParams.MessageType + ": " + logParams.Message);
+            await Task.CompletedTask;
         }
     }
 }

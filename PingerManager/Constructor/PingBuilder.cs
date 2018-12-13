@@ -59,7 +59,7 @@ namespace PingerManager.Constructor
                 }
                 catch (Exception)
                 {
-                    await _logger.Log(new LogParams(MessageType.Error,
+                    await _logger.Log(new LogParams(MessageType.Info,
                         DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption,
                         pingEntity.ConfigEntity.LogPath));
                 }
