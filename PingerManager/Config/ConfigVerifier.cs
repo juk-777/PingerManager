@@ -15,38 +15,38 @@ namespace PingerManager.Config
         }
         public bool Verify(IEnumerable<ConfigEntity> configEntityList)
         {
-            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка конфигурации ...", MainLogPath.LogPath));
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка конфигурации ...", MainLogPath.LogPath)).GetAwaiter().GetResult();
 
             foreach (var configEntity in configEntityList)
             {
                 if (string.IsNullOrEmpty(configEntity.Host))
                 {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Хост не задан!", MainLogPath.LogPath));
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Хост не задан!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                     return false;
                 }
 
                 string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
                 {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Хост {configEntity.Host} задан не корректно!", MainLogPath.LogPath));
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Хост {configEntity.Host} задан не корректно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                     return false;
                 }
 
                 if (configEntity.Period <= 0)
                 {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Период задан неверно!", MainLogPath.LogPath));
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Период задан неверно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                     return false;
                 }
 
                 if (string.IsNullOrEmpty(configEntity.Protocol))
                 {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Протокол не задан!", MainLogPath.LogPath));
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Протокол не задан!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                     return false;
                 }
 
                 if (configEntity.Protocol != "ICMP" && configEntity.Protocol != "HTTP" && configEntity.Protocol != "TCP")
                 {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Протокол: { configEntity.Protocol} не поддерживается!", MainLogPath.LogPath));
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Протокол: { configEntity.Protocol} не поддерживается!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                     return false;
                 }
 
@@ -54,7 +54,7 @@ namespace PingerManager.Config
                 {
                     if (configEntity.Port < 0)
                     {
-                        _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Порт задан неверно!", MainLogPath.LogPath));
+                        _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Порт задан неверно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                         return false;
                     }
                 }
@@ -63,13 +63,13 @@ namespace PingerManager.Config
                 {
                     if (configEntity.ValidStatusCode < 0)
                     {
-                        _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Валидный статус код задан неверно!", MainLogPath.LogPath));
+                        _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Валидный статус код задан неверно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
                         return false;
                     }
                 }
             }
 
-            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка завершена успешно!", MainLogPath.LogPath));
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Проверка завершена успешно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
             return true;
         }
     }

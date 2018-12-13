@@ -38,15 +38,15 @@ namespace PingerManager.BusinessLogic
             }
             catch (TaskCanceledException)
             {
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob до её запуска ...", MainLogPath.LogPath ?? "log_main.txt"));
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob до её запуска ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
             }
             catch (OperationCanceledException)
             {
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob ...", MainLogPath.LogPath ?? "log_main.txt"));
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
-                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + e.Message, MainLogPath.LogPath ?? "log_main.txt"));
+                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + e.Message, MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
                 throw;
             }
         }

@@ -28,7 +28,7 @@ namespace PingerManager.Constructor
 
             foreach (var configEntity in configEntityList)
             {
-                _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol, MainLogPath.LogPath));
+                _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol, MainLogPath.LogPath)).GetAwaiter().GetResult();
                 BuildPing(configEntity);
             }
         }
@@ -53,27 +53,23 @@ namespace PingerManager.Constructor
                 {
                     var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
 
-                    await _logger.Log(new LogParams(MessageType.Info,
-                        reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status,
-                        reply.PingEntity.ConfigEntity.LogPath));
+                    await _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
                 }
                 catch (Exception)
                 {
-                    await _logger.Log(new LogParams(MessageType.Info,
-                        DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption,
-                        pingEntity.ConfigEntity.LogPath));
+                    await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption, pingEntity.ConfigEntity.LogPath));
                 }
 
             }
             catch (TaskCanceledException)
             {
                 Dispose();
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
+                await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
             }
             catch (OperationCanceledException)
             {
                 Dispose();
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
+                await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
             }
         }
 
