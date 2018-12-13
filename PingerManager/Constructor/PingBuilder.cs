@@ -48,18 +48,8 @@ namespace PingerManager.Constructor
             try
             {
                 _token.ThrowIfCancellationRequested();
-
-                try
-                {
-                    var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
-
-                    await _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
-                }
-                catch (Exception)
-                {
-                    await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + pingEntity.ConfigEntity.Host + " " + IPStatus.BadOption, pingEntity.ConfigEntity.LogPath));
-                }
-
+                var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
+                await _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
             }
             catch (TaskCanceledException)
             {

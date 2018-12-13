@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PingerManager.Logging
@@ -9,12 +8,11 @@ namespace PingerManager.Logging
         public async Task Write(LogParams logParams)
         {
             var writePath = Path.Combine(logParams.LogPath);
-            var strLog = new StringBuilder();
-            strLog.Append(logParams.MessageType + ": " + logParams.Message);
 
-            using (var sw = new StreamWriter(writePath, true, Encoding.Default))
+            using (var textWriter = TextWriter.Synchronized(new StreamWriter(writePath, true)))
             {
-                await sw.WriteLineAsync(strLog.ToString().Trim());
+                await textWriter.WriteLineAsync(logParams.MessageType + ": " + logParams.Message);
+                await textWriter.FlushAsync();
             }
         }
     }
