@@ -62,10 +62,10 @@ namespace PingerManager
             }
             finally
             {
-                businessLogic.Dispose();
                 cts.Dispose();
                 serviceProvider.Dispose();
-                _logger?.Dispose();
+                loggerFactory.Dispose();
+                businessLogic.Dispose();
             }
 
             #region Goodbye

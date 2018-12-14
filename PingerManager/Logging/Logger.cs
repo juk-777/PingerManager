@@ -21,6 +21,14 @@ namespace PingerManager.Logging
             }
         }
 
+        public void Log(LogParams logParams)
+        {
+            foreach (var provider in Providers)
+            {
+                provider.LogAsync(logParams).GetAwaiter().GetResult();
+            }
+        }
+
         #region IDisposable
         private bool _disposedValue;
 

@@ -23,11 +23,11 @@ namespace PingerManager.Constructor
         public void Start(IEnumerable<ConfigEntity> configEntityList, CancellationToken token)
         {
             _token = token;
-            _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ...")).GetAwaiter().GetResult();
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ..."));
 
             foreach (var configEntity in configEntityList)
             {
-                _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol)).GetAwaiter().GetResult();
+                _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol));
                 BuildPing(configEntity);
             }
         }
@@ -52,8 +52,8 @@ namespace PingerManager.Constructor
             }
             catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)
             {
-                Dispose();
                 await _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ..."));
+                Dispose();
             }
         }
 

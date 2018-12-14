@@ -36,31 +36,9 @@ namespace PingerManager.Constructor
             }
             catch (ArgumentException e)
             {
-                _logger.LogAsync(new LogParams(MessageType.Error, e.Message)).GetAwaiter().GetResult();
+                _logger.Log(new LogParams(MessageType.Error, e.Message));
                 throw;
             }
         }
-
-        #region IDisposable
-        private bool _disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _serviceProvider?.Dispose();
-                }
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

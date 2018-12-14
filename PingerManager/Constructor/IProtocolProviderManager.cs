@@ -1,9 +1,8 @@
 ﻿using PingerManager.Config;
-using System;
 
 namespace PingerManager.Constructor
 {
-    public interface IProtocolProviderManager : IDisposable
+    public interface IProtocolProviderManager
     {
         IProtocolProvider GetProvider(ConfigEntity configEntity);
     }

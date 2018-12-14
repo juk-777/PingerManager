@@ -8,5 +8,6 @@ namespace PingerManager.Logging
     {
         List<ILoggerProvider> Providers { get; }
         Task LogAsync(LogParams logParams);
+        void Log(LogParams logParams);
     }
 }
