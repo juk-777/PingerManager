@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using PingerManager.Config;
@@ -51,12 +50,7 @@ namespace PingerManager.Constructor
                 var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
                 await _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status, reply.PingEntity.ConfigEntity.LogPath));
             }
-            catch (TaskCanceledException)
-            {
-                Dispose();
-                await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
-            }
-            catch (OperationCanceledException)
+            catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)
             {
                 Dispose();
                 await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ...", MainLogPath.LogPath));
