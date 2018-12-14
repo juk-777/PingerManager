@@ -16,9 +16,9 @@ namespace PingerManager.Logging
             _writer = TextWriter.Synchronized(new StreamWriter(MainLogPath.LogPath ?? "log_main.txt"));
         }
 
-        public async Task Log(LogParams logParams)
+        public async Task LogAsync(LogParams logParams)
         {
-            await _txtLoggerWriter.Write(logParams, _writer);
+            await _txtLoggerWriter.WriteAsync(logParams, _writer);
         }
 
         #region IDisposable

@@ -34,7 +34,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "ICMP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))
@@ -51,7 +51,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "TCP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))
@@ -68,7 +68,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "HTTP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.Log(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))
@@ -101,7 +101,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var httpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await httpPing.Ping(DateTime.Now, pingEntity);
+            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity);
 
             Assert.AreEqual(IPStatus.BadOption, pingReply.Status);
         }
@@ -129,7 +129,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var httpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await httpPing.Ping(DateTime.Now, pingEntity);
+            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity);
 
             Assert.AreEqual(IPStatus.Success, pingReply.Status);
         }
@@ -156,7 +156,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var icmpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await icmpPing.Ping(DateTime.Now, pingEntity);
+            var pingReply = await icmpPing.PingAsync(DateTime.Now, pingEntity);
 
             Assert.AreEqual(IPStatus.Success, pingReply.Status);
         }

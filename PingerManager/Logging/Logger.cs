@@ -13,11 +13,11 @@ namespace PingerManager.Logging
             Providers = new List<ILoggerProvider>();
         }
 
-        public async Task Log(LogParams logParams)
+        public async Task LogAsync(LogParams logParams)
         {
             foreach (var provider in Providers)
             {
-                await provider.Log(logParams);
+                await provider.LogAsync(logParams);
             }
         }
 

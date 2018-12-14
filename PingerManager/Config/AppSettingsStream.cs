@@ -33,7 +33,7 @@ namespace PingerManager.Config
 
             var configEntityList = childSection.Select(child => child.Get<ConfigEntity>()).ToList();
 
-            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!")).GetAwaiter().GetResult();
+            _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!")).GetAwaiter().GetResult();
             return configEntityList;
         }
     }

@@ -6,7 +6,7 @@ namespace PingerManager.Constructor
 {
     public class IcmpPing : IProtocolProvider
     {
-        public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
+        public async Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity)
         {
             try
             {

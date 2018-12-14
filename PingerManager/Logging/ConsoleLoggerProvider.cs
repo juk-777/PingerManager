@@ -5,7 +5,7 @@ namespace PingerManager.Logging
 {
     public class ConsoleLoggerProvider : ILoggerProvider
     {
-        public async Task Log(LogParams logParams)
+        public async Task LogAsync(LogParams logParams)
         {
             Console.WriteLine(logParams.MessageType + ": " + logParams.Message);
             await Task.CompletedTask;

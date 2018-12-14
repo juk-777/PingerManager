@@ -23,11 +23,11 @@ namespace PingerManager.Constructor
         public void Start(IEnumerable<ConfigEntity> configEntityList, CancellationToken token)
         {
             _token = token;
-            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ..."));
+            _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ..."));
 
             foreach (var configEntity in configEntityList)
             {
-                _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol)).GetAwaiter().GetResult();
+                _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Старт: " + configEntity.Host + " - " + configEntity.Protocol)).GetAwaiter().GetResult();
                 BuildPing(configEntity);
             }
         }
@@ -47,13 +47,13 @@ namespace PingerManager.Constructor
             try
             {
                 _token.ThrowIfCancellationRequested();
-                var reply = await pingEntity.ProtocolProvider.Ping(DateTime.Now, pingEntity);
-                await _logger.Log(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status));
+                var reply = await pingEntity.ProtocolProvider.PingAsync(DateTime.Now, pingEntity);
+                await _logger.LogAsync(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status));
             }
             catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)
             {
                 Dispose();
-                await _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ..."));
+                await _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ..."));
             }
         }
 

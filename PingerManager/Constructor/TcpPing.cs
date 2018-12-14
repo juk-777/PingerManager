@@ -7,7 +7,7 @@ namespace PingerManager.Constructor
 {
     public class TcpPing : IProtocolProvider
     {
-        public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
+        public async Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity)
         {
             using (var tcpClient = new TcpClient())
             {

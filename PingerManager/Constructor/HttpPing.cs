@@ -7,7 +7,7 @@ namespace PingerManager.Constructor
 {
     public class HttpPing : IProtocolProvider
     {
-        public async Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity)
+        public async Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity)
         {
             var request = (HttpWebRequest)WebRequest.Create(new UriBuilder(pingEntity.ConfigEntity.Host).Uri);
             request.Timeout = (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds;

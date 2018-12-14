@@ -36,7 +36,7 @@ namespace PingerManager.Constructor
             }
             catch (ArgumentException e)
             {
-                _logger.Log(new LogParams(MessageType.Error, e.Message)).GetAwaiter().GetResult();
+                _logger.LogAsync(new LogParams(MessageType.Error, e.Message)).GetAwaiter().GetResult();
                 throw;
             }
         }

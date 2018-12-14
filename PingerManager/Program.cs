@@ -45,7 +45,7 @@ namespace PingerManager
                 if (ch == 'c' || ch == 'C' || ch == 'с' || ch == 'С')
                 {
                     cts.Cancel();
-                    _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...")).GetAwaiter().GetResult();
+                    _logger?.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...")).GetAwaiter().GetResult();
                 }
 
                 if (ch != '\r')
@@ -53,11 +53,11 @@ namespace PingerManager
                     while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
                 }
 
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...")).GetAwaiter().GetResult();
+                _logger?.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...")).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
-                _logger?.Log(new LogParams(MessageType.Error, e.Message));
+                _logger?.LogAsync(new LogParams(MessageType.Error, e.Message));
                 throw;
             }
             finally

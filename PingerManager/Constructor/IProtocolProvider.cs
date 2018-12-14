@@ -5,6 +5,6 @@ namespace PingerManager.Constructor
 {
     public interface IProtocolProvider
     {
-        Task<PingReply> Ping(DateTime pingDate, PingEntity pingEntity);
+        Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity);
     }
 }

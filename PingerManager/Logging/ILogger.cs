@@ -7,6 +7,6 @@ namespace PingerManager.Logging
     public interface ILogger : IDisposable
     {
         List<ILoggerProvider> Providers { get; }
-        Task Log(LogParams logParams);
+        Task LogAsync(LogParams logParams);
     }
 }
