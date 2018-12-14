@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using PingerManager.Logging;
 using System.Linq;
-using PingerManager.Config;
 
 namespace PingerManager
 {
@@ -46,7 +45,7 @@ namespace PingerManager
                 if (ch == 'c' || ch == 'C' || ch == 'с' || ch == 'С')
                 {
                     cts.Cancel();
-                    _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
+                    _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ...")).GetAwaiter().GetResult();
                 }
 
                 if (ch != '\r')
@@ -54,11 +53,11 @@ namespace PingerManager
                     while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
                 }
 
-                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
+                _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Завершение работы ...")).GetAwaiter().GetResult();
             }
             catch (Exception e)
             {
-                _logger?.Log(new LogParams(MessageType.Error, e.Message, MainLogPath.LogPath ?? "log_main.txt"));
+                _logger?.Log(new LogParams(MessageType.Error, e.Message));
                 throw;
             }
             finally

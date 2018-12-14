@@ -7,6 +7,5 @@
         public string Protocol { get; set; }
         public int Port { get; set; }
         public int ValidStatusCode { get; set; }
-        public string LogPath { get; set; }
     }
 }

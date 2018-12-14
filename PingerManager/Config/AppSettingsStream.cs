@@ -38,7 +38,7 @@ namespace PingerManager.Config
                 configEntityList.Add(configEntity);
             }
 
-            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!", MainLogPath.LogPath)).GetAwaiter().GetResult();
+            _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!")).GetAwaiter().GetResult();
             return configEntityList;
         }
     }

@@ -25,8 +25,7 @@ namespace PingerManager.Tests
                 Period = 2,
                 Protocol = "ICMP",
                 Port = 0,
-                ValidStatusCode = 0,
-                LogPath = "log_1.txt"
+                ValidStatusCode = 0
             };
         }
 

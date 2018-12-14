@@ -22,8 +22,7 @@ namespace PingerManager.Tests
                 Period = 2,
                 Protocol = "ICMP",
                 Port = 0,
-                ValidStatusCode = 0,
-                LogPath = "log_1.txt"
+                ValidStatusCode = 0
             };
         }
 
@@ -66,7 +65,6 @@ namespace PingerManager.Tests
             Assert.AreEqual(configEntityListExp[0].Protocol, configEntityList[0].Protocol);
             Assert.AreEqual(configEntityListExp[0].Port, configEntityList[0].Port);
             Assert.AreEqual(configEntityListExp[0].ValidStatusCode, configEntityList[0].ValidStatusCode);
-            Assert.AreEqual(configEntityListExp[0].LogPath, configEntityList[0].LogPath);
         }
 
         [TestMethod]

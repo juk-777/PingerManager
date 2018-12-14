@@ -34,11 +34,11 @@ namespace PingerManager.BusinessLogic
 
                 _pingBuilder.Start(configEntityList, token);
             }
-            catch (TaskCanceledException) { _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob до её запуска ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult(); }
-            catch (OperationCanceledException) { _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob ...", MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult(); }
+            catch (TaskCanceledException) { _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob до её запуска ...")).GetAwaiter().GetResult(); }
+            catch (OperationCanceledException) { _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена операции StartJob ...")).GetAwaiter().GetResult(); }
             catch (Exception e)
             {
-                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + e.Message, MainLogPath.LogPath ?? "log_main.txt")).GetAwaiter().GetResult();
+                _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + e.Message)).GetAwaiter().GetResult();
                 throw;
             }
         }

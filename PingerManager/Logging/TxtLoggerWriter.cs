@@ -5,15 +5,10 @@ namespace PingerManager.Logging
 {
     public class TxtLoggerWriter : ITxtLoggerWriter
     {
-        public async Task Write(LogParams logParams)
+        public async Task Write(LogParams logParams, TextWriter textWriter)
         {
-            var writePath = Path.Combine(logParams.LogPath);
-
-            using (var textWriter = TextWriter.Synchronized(new StreamWriter(writePath, true)))
-            {
-                await textWriter.WriteLineAsync(logParams.MessageType + ": " + logParams.Message);
-                await textWriter.FlushAsync();
-            }
+            await textWriter.WriteLineAsync(logParams.MessageType + ": " + logParams.Message);
+            await textWriter.FlushAsync();
         }
     }
 }
