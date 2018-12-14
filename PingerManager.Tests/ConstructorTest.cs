@@ -34,7 +34,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "ICMP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))
@@ -51,7 +51,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "TCP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))
@@ -68,7 +68,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "HTTP";
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IProtocolProviderManager>(p => new ProtocolProviderManager(mockLogger.Object))

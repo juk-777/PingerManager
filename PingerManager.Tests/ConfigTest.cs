@@ -4,6 +4,7 @@ using Moq;
 using PingerManager.Config;
 using PingerManager.Logging;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Assert = NUnit.Framework.Assert;
 
 namespace PingerManager.Tests
@@ -72,7 +73,7 @@ namespace PingerManager.Tests
         {
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -90,7 +91,7 @@ namespace PingerManager.Tests
             ConfigEntity.Host = null;
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -108,7 +109,7 @@ namespace PingerManager.Tests
             ConfigEntity.Host = "ya@ru";
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -126,7 +127,7 @@ namespace PingerManager.Tests
             ConfigEntity.Period = 0;
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -144,7 +145,7 @@ namespace PingerManager.Tests
             ConfigEntity.Protocol = null;
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -162,7 +163,7 @@ namespace PingerManager.Tests
             ConfigEntity.Protocol = "ICMPP";
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -181,7 +182,7 @@ namespace PingerManager.Tests
             ConfigEntity.Port = -1;
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
@@ -200,7 +201,7 @@ namespace PingerManager.Tests
             ConfigEntity.ValidStatusCode = -1;
             List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>()));
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))

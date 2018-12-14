@@ -23,7 +23,7 @@ namespace PingerManager.Constructor
         public void Start(IEnumerable<ConfigEntity> configEntityList, CancellationToken token)
         {
             _token = token;
-            _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ..."));
+            _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Запускаем Pinger ...")).GetAwaiter().GetResult();
 
             foreach (var configEntity in configEntityList)
             {

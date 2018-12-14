@@ -57,7 +57,7 @@ namespace PingerManager
             }
             catch (Exception e)
             {
-                _logger?.LogAsync(new LogParams(MessageType.Error, e.Message));
+                _logger?.LogAsync(new LogParams(MessageType.Error, e.Message)).GetAwaiter().GetResult();
                 throw;
             }
             finally
@@ -65,6 +65,7 @@ namespace PingerManager
                 businessLogic.Dispose();
                 cts.Dispose();
                 serviceProvider.Dispose();
+                _logger?.Dispose();
             }
 
             #region Goodbye
