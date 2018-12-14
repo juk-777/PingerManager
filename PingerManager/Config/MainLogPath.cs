@@ -2,6 +2,6 @@
 {
     public class MainLogPath
     {
-        public static string LogPath { get; set; }
+        public static string LogPath => null;
     }
 }

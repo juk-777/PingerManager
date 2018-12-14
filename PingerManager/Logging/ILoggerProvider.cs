@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace PingerManager.Logging
 {
-    public interface ILoggerProvider
+    public interface ILoggerProvider : IDisposable
     {
         Task Log(LogParams logParams);
     }

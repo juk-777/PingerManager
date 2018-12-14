@@ -25,7 +25,7 @@ namespace PingerManager.Config
                     return false;
                 }
 
-                string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
+                var urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
                 {
                     _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Хост {configEntity.Host} задан не корректно!")).GetAwaiter().GetResult();
