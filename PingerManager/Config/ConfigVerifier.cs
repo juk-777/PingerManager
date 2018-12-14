@@ -21,7 +21,7 @@ namespace PingerManager.Config
             {
                 if (string.IsNullOrEmpty(configEntity.Host))
                 {
-                    _logger.LogAsync(new LogParams(MessageType.Error, DateTime.Now + " " + "Хост не задан!")).GetAwaiter().GetResult();
+                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Хост не задан!"));
                     return false;
                 }
 

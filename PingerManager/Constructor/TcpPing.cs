@@ -14,7 +14,7 @@ namespace PingerManager.Constructor
                 try
                 {
                     await Task.CompletedTask;
-                    if (! tcpClient.ConnectAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, pingEntity.ConfigEntity.Port).Wait(pingEntity.ConfigEntity.Period))
+                    if (! tcpClient.ConnectAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, pingEntity.ConfigEntity.Port).Wait((int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds))
                     {
                         return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                     }

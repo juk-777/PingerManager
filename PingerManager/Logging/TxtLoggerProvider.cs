@@ -30,6 +30,8 @@ namespace PingerManager.Logging
             {
                 if (disposing)
                 {
+                    _writer?.Flush();
+                    _writer?.Close();
                     _writer?.Dispose();
                 }
                 _disposedValue = true;

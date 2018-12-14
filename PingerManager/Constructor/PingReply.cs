@@ -3,7 +3,7 @@ using System.Net.NetworkInformation;
 
 namespace PingerManager.Constructor
 {
-    public class PingReply : EventArgs
+    public class PingReply
     {
         public DateTime PingDate { get; }
         public PingEntity PingEntity { get; }

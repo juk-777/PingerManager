@@ -48,7 +48,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void ReadConfig_IsCorrect()
         {
-            List<ConfigEntity> configEntityListExp = new List<ConfigEntity> { ConfigEntity };
+            var configEntityListExp = new List<ConfigEntity> { ConfigEntity };
             var mockConfigStream = new Mock<IConfigStream>();
             mockConfigStream
                 .Setup(x => x.ReadStream())
@@ -71,7 +71,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void Verify_Config_True_Returned()
         {
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -89,7 +89,7 @@ namespace PingerManager.Tests
         public void Verify_Config_Host_Is_Null()
         {
             ConfigEntity.Host = null;
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -107,7 +107,7 @@ namespace PingerManager.Tests
         public void Verify_Config_Not_Correct_Host()
         {
             ConfigEntity.Host = "ya@ru";
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -125,7 +125,7 @@ namespace PingerManager.Tests
         public void Verify_Config_Not_Correct_Period()
         {
             ConfigEntity.Period = 0;
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -143,7 +143,7 @@ namespace PingerManager.Tests
         public void Verify_Config_Protocol_Is_Null()
         {
             ConfigEntity.Protocol = null;
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -161,7 +161,7 @@ namespace PingerManager.Tests
         public void Verify_Config_Not_Correct_Protocol()
         {
             ConfigEntity.Protocol = "ICMPP";
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -180,7 +180,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "TCP";
             ConfigEntity.Port = -1;
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -199,7 +199,7 @@ namespace PingerManager.Tests
         {
             ConfigEntity.Protocol = "HTTP";
             ConfigEntity.ValidStatusCode = -1;
-            List<ConfigEntity> configEntityList = new List<ConfigEntity> { ConfigEntity };
+            var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
