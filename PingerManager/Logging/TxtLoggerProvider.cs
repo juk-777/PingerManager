@@ -13,7 +13,7 @@ namespace PingerManager.Logging
         public TxtLoggerProvider(ITxtLoggerWriter txtLoggerWriter)
         {
             _txtLoggerWriter = txtLoggerWriter;
-            _writer = TextWriter.Synchronized(new StreamWriter(MainLogPath.LogPath ?? "log_main.txt"));
+            _writer = TextWriter.Synchronized(new StreamWriter(MainLogPath.LogPath ?? "log_main.txt", true));
         }
 
         public async Task LogAsync(LogParams logParams)
