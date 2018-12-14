@@ -25,7 +25,7 @@ namespace PingerManager.Config
                     return false;
                 }
 
-                var urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
+                const string urlPattern = @"([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?";
                 if (!Regex.IsMatch(configEntity.Host, urlPattern, RegexOptions.IgnoreCase))
                 {
                     _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Хост {configEntity.Host} задан не корректно!")).GetAwaiter().GetResult();
@@ -50,22 +50,16 @@ namespace PingerManager.Config
                     return false;
                 }
 
-                if (configEntity.Protocol == "TCP")
+                switch (configEntity.Protocol)
                 {
-                    if (configEntity.Port < 0)
-                    {
+                    case "TCP" when configEntity.Port < 0:
                         _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Порт задан неверно!")).GetAwaiter().GetResult();
                         return false;
-                    }
-                }
-
-                if (configEntity.Protocol == "HTTP")
-                {
-                    if (configEntity.ValidStatusCode < 0)
-                    {
+                    case "HTTP" when configEntity.ValidStatusCode < 0:
                         _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Валидный статус код задан неверно!")).GetAwaiter().GetResult();
                         return false;
-                    }
+                    default:
+                        continue;
                 }
             }
 

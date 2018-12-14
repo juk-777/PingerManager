@@ -16,10 +16,7 @@ namespace PingerManager.Constructor
             {
                 using (var reply = (HttpWebResponse)await request.GetResponseAsync())
                 {
-                    if (reply.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode)
-                        return new PingReply(pingDate, pingEntity, IPStatus.Success);
-
-                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                    return reply.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode ? new PingReply(pingDate, pingEntity, IPStatus.Success) : new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
             }
             catch (WebException)

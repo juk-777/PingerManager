@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using PingerManager.Logging;
 
@@ -18,8 +19,6 @@ namespace PingerManager.Config
         }
         public List<ConfigEntity> ReadStream()
         {
-            var configEntityList = new List<ConfigEntity>();
-
             _configurationBuilder
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", false);
@@ -32,11 +31,7 @@ namespace PingerManager.Config
             var sectionConfigEntity = configuration.GetSection("ConfigEntities");
             var childSection = sectionConfigEntity.GetChildren();
 
-            foreach (var child in childSection)
-            {
-                var configEntity = child.Get<ConfigEntity>();
-                configEntityList.Add(configEntity);
-            }
+            var configEntityList = childSection.Select(child => child.Get<ConfigEntity>()).ToList();
 
             _logger.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Конфигурация считана успешно!")).GetAwaiter().GetResult();
             return configEntityList;

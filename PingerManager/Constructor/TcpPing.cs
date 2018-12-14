@@ -15,10 +15,7 @@ namespace PingerManager.Constructor
                 {
                     await tcpClient.ConnectAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, pingEntity.ConfigEntity.Port);
 
-                    if (tcpClient.Connected)
-                        return new PingReply(pingDate, pingEntity, IPStatus.Success);
-
-                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                    return tcpClient.Connected ? new PingReply(pingDate, pingEntity, IPStatus.Success) : new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
                 catch (Exception)
                 {
