@@ -14,7 +14,7 @@ namespace PingerManager.Constructor
 
             try
             {
-                using (var reply = (HttpWebResponse)await request.GetResponseAsync())
+                using (var reply = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false))
                 {
                     return reply.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode ? new PingReply(pingDate, pingEntity, IPStatus.Success) : new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
