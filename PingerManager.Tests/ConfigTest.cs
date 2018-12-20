@@ -21,7 +21,7 @@ namespace PingerManager.Tests
             {
                 Host = "ya.ru",
                 Period = 2,
-                Protocol = "ICMP",
+                Protocol = Protocol.Icmp,
                 Port = 0,
                 ValidStatusCode = 0
             };
@@ -140,45 +140,9 @@ namespace PingerManager.Tests
         }
 
         [TestMethod]
-        public void Verify_Config_Protocol_Is_Null()
-        {
-            ConfigEntity.Protocol = null;
-            var configEntityList = new List<ConfigEntity> { ConfigEntity };
-            var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
-
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
-                .BuildServiceProvider();
-
-            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
-            var result = configVerifier.Verify(configEntityList);
-
-            Assert.False(result);
-        }
-
-        [TestMethod]
-        public void Verify_Config_Not_Correct_Protocol()
-        {
-            ConfigEntity.Protocol = "ICMPP";
-            var configEntityList = new List<ConfigEntity> { ConfigEntity };
-            var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
-
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton<IConfigVerifier>(p => new ConfigVerifier(mockLogger.Object))
-                .BuildServiceProvider();
-
-            var configVerifier = serviceProvider.GetService<IConfigVerifier>();
-            var result = configVerifier.Verify(configEntityList);
-
-            Assert.False(result);
-        }
-
-        [TestMethod]
         public void Verify_Config_Not_Correct_Port()
         {
-            ConfigEntity.Protocol = "TCP";
+            ConfigEntity.Protocol = Protocol.Tcp;
             ConfigEntity.Port = -1;
             var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();
@@ -197,7 +161,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void Verify_Config_Not_Correct_ValidStatusCode()
         {
-            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.Protocol = Protocol.Http;
             ConfigEntity.ValidStatusCode = -1;
             var configEntityList = new List<ConfigEntity> { ConfigEntity };
             var mockLogger = new Mock<ILogger>();

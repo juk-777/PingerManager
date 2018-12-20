@@ -47,7 +47,7 @@ namespace PingerManager.Constructor
             try
             {
                 _token.ThrowIfCancellationRequested();
-                var reply = await pingEntity.ProtocolProvider.PingAsync(DateTime.Now, pingEntity);
+                var reply = await pingEntity.ProtocolProvider.PingAsync(DateTime.Now, pingEntity, _logger);
                 await _logger.LogAsync(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status));
             }
             catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)

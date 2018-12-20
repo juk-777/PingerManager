@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PingerManager.Logging;
+using System;
 using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
@@ -7,20 +9,30 @@ namespace PingerManager.Constructor
 {
     public class HttpPing : IProtocolProvider
     {
-        public async Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity)
+        public async Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity, ILogger logger)
         {
-            var request = (HttpWebRequest)WebRequest.Create(new UriBuilder(pingEntity.ConfigEntity.Host).Uri);
-            request.Timeout = (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds;
-
             try
             {
-                using (var reply = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false))
+                using (var httpClient = new HttpClient())
                 {
-                    return reply.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode ? new PingReply(pingDate, pingEntity, IPStatus.Success) : new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                    var reply = new HttpRequestMessage
+                    {
+                        RequestUri = new UriBuilder(pingEntity.ConfigEntity.Host).Uri
+                    };
+
+                    var response = await httpClient.SendAsync(reply);
+
+                    if (response.StatusCode == (HttpStatusCode)pingEntity.ConfigEntity.ValidStatusCode)
+                    {
+                        return new PingReply(pingDate, pingEntity, IPStatus.Success);
+                    }
+
+                    return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
                 }
             }
-            catch (WebException)
+            catch (Exception e)
             {
+                logger.Log(new LogParams(MessageType.Warning, e.Message));
                 return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
             }
         }

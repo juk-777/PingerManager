@@ -38,13 +38,7 @@ namespace PingerManager.Config
                     return false;
                 }
 
-                if (string.IsNullOrEmpty(configEntity.Protocol))
-                {
-                    _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Протокол не задан!"));
-                    return false;
-                }
-
-                if (configEntity.Protocol != "ICMP" && configEntity.Protocol != "HTTP" && configEntity.Protocol != "TCP")
+                if (configEntity.Protocol != Protocol.Icmp && configEntity.Protocol != Protocol.Http && configEntity.Protocol != Protocol.Tcp)
                 {
                     _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + $"Протокол: { configEntity.Protocol} не поддерживается!"));
                     return false;
@@ -52,12 +46,14 @@ namespace PingerManager.Config
 
                 switch (configEntity.Protocol)
                 {
-                    case "TCP" when configEntity.Port < 0:
+                    case Protocol.Tcp when configEntity.Port < 0:
                         _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Порт задан неверно!"));
                         return false;
-                    case "HTTP" when configEntity.ValidStatusCode < 0:
+                    case Protocol.Http when configEntity.ValidStatusCode < 0:
                         _logger.Log(new LogParams(MessageType.Error, DateTime.Now + " " + "Валидный статус код задан неверно!"));
                         return false;
+                    case Protocol.Icmp:
+                        break;
                     default:
                         continue;
                 }

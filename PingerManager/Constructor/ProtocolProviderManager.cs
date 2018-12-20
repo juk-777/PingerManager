@@ -24,11 +24,11 @@ namespace PingerManager.Constructor
             {
                 switch (configEntity.Protocol)
                 {
-                    case "ICMP":
+                    case Protocol.Icmp:
                         return protocolProviders.First(o => o.GetType() == typeof(IcmpPing));
-                    case "TCP":
+                    case Protocol.Tcp:
                         return protocolProviders.First(o => o.GetType() == typeof(TcpPing));
-                    case "HTTP":
+                    case Protocol.Http:
                         return protocolProviders.First(o => o.GetType() == typeof(HttpPing));
                     default:
                         throw new ArgumentException(DateTime.Now + " " + "Протокол не поддерживается!");

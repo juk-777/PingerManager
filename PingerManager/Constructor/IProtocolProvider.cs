@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PingerManager.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace PingerManager.Constructor
 {
     public interface IProtocolProvider
     {
-        Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity);
+        Task<PingReply> PingAsync(DateTime pingDate, PingEntity pingEntity, ILogger logger);
     }
 }

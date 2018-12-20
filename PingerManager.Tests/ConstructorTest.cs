@@ -23,7 +23,7 @@ namespace PingerManager.Tests
             {
                 Host = "ya.ru",
                 Period = 2,
-                Protocol = "ICMP",
+                Protocol = Protocol.Icmp,
                 Port = 0,
                 ValidStatusCode = 0
             };
@@ -32,7 +32,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void ProtocolProviderManager_ICMP_Provider_Is_Set()
         {
-            ConfigEntity.Protocol = "ICMP";
+            ConfigEntity.Protocol = Protocol.Icmp;
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -49,7 +49,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void ProtocolProviderManager_TCP_Provider_Is_Set()
         {
-            ConfigEntity.Protocol = "TCP";
+            ConfigEntity.Protocol = Protocol.Tcp;
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -66,7 +66,7 @@ namespace PingerManager.Tests
         [TestMethod]
         public void ProtocolProviderManager_HTTP_Provider_Is_Set()
         {
-            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.Protocol = Protocol.Http;
             var mockLogger = new Mock<ILogger>();
             mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
@@ -83,8 +83,12 @@ namespace PingerManager.Tests
         [TestMethod]
         public async Task HTTP_Ping_Return_BadOption_Status_When_ValidStatusCode_Is_Not_200()
         {
-            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.Protocol = Protocol.Http;
             ConfigEntity.ValidStatusCode = 201;
+
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
+
             var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
             mockProtocolProviderManager
                 .Setup(x => x.GetProvider(It.IsAny<ConfigEntity>()))
@@ -101,7 +105,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var httpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity);
+            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity, mockLogger.Object);
 
             Assert.AreEqual(IPStatus.BadOption, pingReply.Status);
         }
@@ -110,8 +114,11 @@ namespace PingerManager.Tests
         public async Task Benchmark_Test_Yandex_HTTP_Ping_Return_Success_Status_When_ValidStatusCode_Is_200()
         {
             ConfigEntity.Host = "ya.ru";
-            ConfigEntity.Protocol = "HTTP";
+            ConfigEntity.Protocol = Protocol.Http;
             ConfigEntity.ValidStatusCode = 200;
+
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
             mockProtocolProviderManager
@@ -129,7 +136,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var httpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity);
+            var pingReply = await httpPing.PingAsync(DateTime.Now, pingEntity, mockLogger.Object);
 
             Assert.AreEqual(IPStatus.Success, pingReply.Status);
         }
@@ -138,7 +145,10 @@ namespace PingerManager.Tests
         public async Task Benchmark_Test_Yandex_ICMP_Ping_Return_Success_Status()
         {
             ConfigEntity.Host = "ya.ru";
-            ConfigEntity.Protocol = "ICMP";
+            ConfigEntity.Protocol = Protocol.Icmp;
+
+            var mockLogger = new Mock<ILogger>();
+            mockLogger.Setup(x => x.LogAsync(It.IsAny<LogParams>())).Returns(Task.CompletedTask);
 
             var mockProtocolProviderManager = new Mock<IProtocolProviderManager>();
             mockProtocolProviderManager
@@ -156,7 +166,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var icmpPing = serviceProvider.GetService<IProtocolProvider>();
-            var pingReply = await icmpPing.PingAsync(DateTime.Now, pingEntity);
+            var pingReply = await icmpPing.PingAsync(DateTime.Now, pingEntity, mockLogger.Object);
 
             Assert.AreEqual(IPStatus.Success, pingReply.Status);
         }

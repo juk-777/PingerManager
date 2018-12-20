@@ -55,6 +55,7 @@ namespace PingerManager.Logging
     public enum MessageType
     {
         Info = 1,
+        Warning,
         Error
     }
 }
