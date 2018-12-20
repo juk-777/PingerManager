@@ -53,7 +53,6 @@ namespace PingerManager.Constructor
             catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)
             {
                 await _logger.LogAsync(new LogParams(MessageType.Info, DateTime.Now + " " + "Отмена пингера ..."));
-                Dispose();
             }
         }
 

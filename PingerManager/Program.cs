@@ -35,8 +35,10 @@ namespace PingerManager
             try
             {
                 var loggerProviders = serviceProvider.GetServices<ILoggerProvider>().ToList();
-                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(ConsoleLoggerProvider)));
-                loggerFactory.AddLoggerProvider(loggerProviders.First(o => o.GetType() == typeof(TxtLoggerProvider)));
+                foreach (var provider in loggerProviders)
+                {
+                    loggerFactory.AddLoggerProvider(provider);
+                }
                 _logger = loggerFactory.Logger;
 
                 businessLogic.StartJob(token);
@@ -46,6 +48,7 @@ namespace PingerManager
                 {
                     cts.Cancel();
                     _logger?.Log(new LogParams(MessageType.Info, DateTime.Now + " " + "Получен запрос на отмену операции ..."));
+                    businessLogic.Dispose();
                 }
 
                 if (ch != '\r')
@@ -63,9 +66,10 @@ namespace PingerManager
             finally
             {
                 cts.Dispose();
-                serviceProvider.Dispose();
+                businessLogic?.Dispose();
+                Thread.Sleep(2000);
                 loggerFactory.Dispose();
-                businessLogic.Dispose();
+                serviceProvider.Dispose();
             }
 
             #region Goodbye
