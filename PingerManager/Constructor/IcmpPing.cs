@@ -22,7 +22,7 @@ namespace PingerManager.Constructor
             }
             catch (Exception e)
             {
-                await logger.LogAsync(new LogParams(MessageType.Warning, e.Message));
+                logger.Log(new LogParams(MessageType.Warning, e.Message));
                 return null;
             }
         }
