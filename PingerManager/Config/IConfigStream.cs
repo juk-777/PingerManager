@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace PingerManager.Config
 {
     public interface IConfigStream
     {
-        List<ConfigEntity> ReadStream();
+        List<ConfigEntity> ReadStream(IConfiguration configuration);
     }
 }

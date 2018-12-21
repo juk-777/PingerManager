@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
 using PingerManager.Logging;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace PingerManager
 {
@@ -27,6 +29,9 @@ namespace PingerManager
             #endregion
 
             var serviceProvider = PingerServiceProvider.ServiceProvider;
+            var configurationBuilder = serviceProvider.GetService<IConfigurationBuilder>();
+            configurationBuilder.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", false);
+            var configuration = configurationBuilder.Build();
             var businessLogic = serviceProvider.GetService<IPingerBusinessLogic>();
             var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             var cts = new CancellationTokenSource();
@@ -41,7 +46,7 @@ namespace PingerManager
                 }
                 _logger = loggerFactory.Logger;
 
-                businessLogic.StartJob(token);
+                businessLogic.StartJob(configuration, token);
 
                 var ch = Console.ReadKey(true).KeyChar;
                 if (ch == 'c' || ch == 'C' || ch == 'с' || ch == 'С')

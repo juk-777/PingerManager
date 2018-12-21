@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using PingerManager.Config;
 using PingerManager.Constructor;
 using PingerManager.Logging;
@@ -22,12 +23,12 @@ namespace PingerManager.BusinessLogic
             _logger = logger;
         }
 
-        public void StartJob(CancellationToken token)
+        public void StartJob(IConfiguration configuration, CancellationToken token)
         {
             try
             {
                 token.ThrowIfCancellationRequested();
-                var configEntityList = _configReader.ReadConfig();
+                var configEntityList = _configReader.ReadConfig(configuration);
 
                 if (! _configVerifier.Verify(configEntityList))
                     throw new ArgumentException("Проверка завершена с ошибкой!");

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PingerManager.Config;
@@ -30,9 +31,10 @@ namespace PingerManager.Tests
         [TestMethod]
         public void ReadStream_Verify()
         {
+            var mockConfiguration = new Mock<IConfiguration>();
             var mockConfigStream = new Mock<IConfigStream>();
             mockConfigStream
-                .Setup(x => x.ReadStream())
+                .Setup(x => x.ReadStream(mockConfiguration.Object))
                 .Returns(It.IsAny<List<ConfigEntity>>());
 
             var serviceProvider = new ServiceCollection()
@@ -40,7 +42,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var configReader = serviceProvider.GetService<IConfigReader>();
-            configReader.ReadConfig();
+            configReader.ReadConfig(mockConfiguration.Object);
 
             mockConfigStream.VerifyAll();
         }
@@ -49,9 +51,10 @@ namespace PingerManager.Tests
         public void ReadConfig_IsCorrect()
         {
             var configEntityListExp = new List<ConfigEntity> { ConfigEntity };
+            var mockConfiguration = new Mock<IConfiguration>();
             var mockConfigStream = new Mock<IConfigStream>();
             mockConfigStream
-                .Setup(x => x.ReadStream())
+                .Setup(x => x.ReadStream(mockConfiguration.Object))
                 .Returns(configEntityListExp);
 
             var serviceProvider = new ServiceCollection()
@@ -59,7 +62,7 @@ namespace PingerManager.Tests
                 .BuildServiceProvider();
 
             var configReader = serviceProvider.GetService<IConfigReader>();
-            IList<ConfigEntity> configEntityList = configReader.ReadConfig();
+            IList<ConfigEntity> configEntityList = configReader.ReadConfig(mockConfiguration.Object);
 
             Assert.AreEqual(configEntityListExp[0].Host, configEntityList[0].Host);
             Assert.AreEqual(configEntityListExp[0].Period, configEntityList[0].Period);

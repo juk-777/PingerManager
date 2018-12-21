@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace PingerManager.Config
 {
@@ -11,9 +12,9 @@ namespace PingerManager.Config
             _configStream = configStream;
         }
 
-        public List<ConfigEntity> ReadConfig()
+        public List<ConfigEntity> ReadConfig(IConfiguration configuration)
         {
-            var configEntityList = _configStream.ReadStream();
+            var configEntityList = _configStream.ReadStream(configuration);
 
             return configEntityList;
         }

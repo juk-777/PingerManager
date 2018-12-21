@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using PingerManager.Logging;
@@ -9,22 +8,14 @@ namespace PingerManager.Config
 {
     public class AppSettingsStream : IConfigStream
     {
-        private readonly IConfigurationBuilder _configurationBuilder;
         private readonly ILogger _logger;
 
-        public AppSettingsStream(IConfigurationBuilder configurationBuilder, ILogger logger)
+        public AppSettingsStream(ILogger logger)
         {
-            _configurationBuilder = configurationBuilder;
             _logger = logger;
         }
-        public List<ConfigEntity> ReadStream()
+        public List<ConfigEntity> ReadStream(IConfiguration configuration)
         {
-            _configurationBuilder
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false);
-
-            var configuration = _configurationBuilder.Build();
-
             var sectionMainLogPath = configuration.GetSection("MainLogPath");
             sectionMainLogPath.Get<MainLogPath>();
             
