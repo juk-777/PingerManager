@@ -32,8 +32,8 @@ namespace PingerManager.Constructor
             }
             catch (Exception e)
             {
-                logger.Log(new LogParams(MessageType.Warning, e.Message));
-                return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                await logger.LogAsync(new LogParams(MessageType.Warning, e.Message));
+                return null;
             }
         }
     }

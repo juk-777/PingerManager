@@ -14,17 +14,17 @@ namespace PingerManager.Constructor
             {
                 using (var tcpClient = new TcpClient())
                 {
-                    await Task.WhenAny(
-                        tcpClient.ConnectAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, pingEntity.ConfigEntity.Port),
-                        Task.Delay(2000));
+                    var host = new UriBuilder(pingEntity.ConfigEntity.Host).Host;
+                    var port = pingEntity.ConfigEntity.Port;
+                    await Task.WhenAny(tcpClient.ConnectAsync(host, port), Task.Delay(2000));
 
                     return !tcpClient.Connected ? new PingReply(pingDate, pingEntity, IPStatus.BadOption) : new PingReply(pingDate, pingEntity, IPStatus.Success);
                 }
             }
             catch (Exception e)
             {
-                logger.Log(new LogParams(MessageType.Warning, e.Message));
-                return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                await logger.LogAsync(new LogParams(MessageType.Warning, e.Message));
+                return null;
             }
         }
     }

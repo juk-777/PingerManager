@@ -37,7 +37,8 @@ namespace PingerManager.Constructor
             var pingEntity = new PingEntity { ConfigEntity = configEntity, ProtocolProvider = _protocolProviderManager.GetProvider(configEntity) };
 
             TimerCallback tm = Ping;
-            _timers.Add(new Timer(tm, pingEntity, 0, (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds));
+            var period = (int)TimeSpan.FromSeconds(pingEntity.ConfigEntity.Period).TotalMilliseconds;
+            _timers.Add(new Timer(tm, pingEntity, 0, period));
         }
 
         private async void Ping(object obj)
@@ -48,7 +49,10 @@ namespace PingerManager.Constructor
             {
                 _token.ThrowIfCancellationRequested();
                 var reply = await pingEntity.ProtocolProvider.PingAsync(DateTime.Now, pingEntity, _logger);
-                await _logger.LogAsync(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status));
+                if (reply != null)
+                {
+                    await _logger.LogAsync(new LogParams(MessageType.Info, reply.PingDate + " " + reply.PingEntity.ConfigEntity.Host + " " + reply.Status));
+                }
             }
             catch (Exception e) when (e is TaskCanceledException || e is OperationCanceledException)
             {

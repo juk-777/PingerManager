@@ -13,15 +13,17 @@ namespace PingerManager.Constructor
             {
                 using (var ping = new Ping())
                 {
-                    var reply = await ping.SendPingAsync(new UriBuilder(pingEntity.ConfigEntity.Host).Host, (int)TimeSpan.FromSeconds(2).TotalMilliseconds);
+                    var host = new UriBuilder(pingEntity.ConfigEntity.Host).Host;
+                    var timeout = (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
+                    var reply = await ping.SendPingAsync(host, timeout);
 
                     return new PingReply(pingDate, pingEntity, reply.Status);
                 }
             }
             catch (Exception e)
             {
-                logger.Log(new LogParams(MessageType.Warning, e.Message));
-                return new PingReply(pingDate, pingEntity, IPStatus.BadOption);
+                await logger.LogAsync(new LogParams(MessageType.Warning, e.Message));
+                return null;
             }
         }
     }
